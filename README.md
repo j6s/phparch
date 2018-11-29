@@ -27,6 +27,7 @@ libraries have different focuses though:
             ->fromDirectory(__DIR__ . '/../../app')
             ->validate(new ForbiddenDependency('Lib\\', 'App\\'))
             ->errors();
+
         $this->assertEmpty($errors);
     }
 ```
@@ -43,12 +44,12 @@ libraries have different focuses though:
             ->identifiedByNamespace('J6s\\PhpArch\\Validation')
             ->mustNotDependOn('Validation');
         
-            $errors = (new PhpArch())
-                ->fromDirectory(__DIR__ . '/../../app')
-                ->validate($architecture)
-                ->errors();
+        $errors = (new PhpArch())
+            ->fromDirectory(__DIR__ . '/../../app')
+            ->validate($architecture)
+            ->errors();
 
-            $this->assertEmpty($errors);
+        $this->assertEmpty($errors);
     }
 ```
 
