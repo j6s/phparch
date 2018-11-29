@@ -1,5 +1,10 @@
 # PHPArch
 
+- [What is this?](#what-is-this)
+- [Simple Namespace validation](#simple-namespace-validation)
+    - [Available Validators](#available-validators)
+- [Defining an architecture](#defining-an-architecture)
+
 ## What is this?
 
 PHPArch is a work in progress architectural testing library for PHP projects.
