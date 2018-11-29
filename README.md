@@ -27,6 +27,7 @@ libraries have different focuses though:
             ->fromDirectory(__DIR__ . '/../../app')
             ->validate(new ForbiddenDependency('Lib\\', 'App\\'))
             ->validate(new MustBeSelfContained('App\\Utility'))
+            ->validate(new MustOnlyDependOn('App\\Mailing', 'PHPMailer\\PHPMailer'))
             ->errors();
 
         $this->assertEmpty($errors);
