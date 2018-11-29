@@ -16,9 +16,10 @@ libraries have different focuses though:
 - phparch is focused on providing a testing utility to ensure architectural boundaries are kept.
 - php-dependency-analysis can be used to visualize the components in your system and their dependencies.
 
-## Examples
+## Simple Namespace validation
 
-### Validation of simple namespaces
+The most simple type of check PHPArch can help you with are simple namespace based checks:
+Setup rules for which namespace is allowed for forbidden to depend on which other namespace.
 
 ```php
 public function testSimpleNamespaces()
@@ -34,7 +35,20 @@ public function testSimpleNamespaces()
 }
 ```
 
-### Validating an architecture
+### Available Validators
+Currently the following validators are available:
+- `ForbiddenDependency` Lets you declare that one namespace is not allowed to depend on another namespace.
+- `MustBeSelfContained` Lets you declare that a namespace must be self-contained meaning that it may not have
+  any external dependencies.
+- `MustOnlyDependOn` Lets you declare that one namespace must only depend on another namespace.
+
+Most architectural boundaries can be described with these rules.
+
+## Defining an architecture
+
+PHPArch also contains a fluent API that allows you to define a component based Architecture which is then validated.
+The API is based on components which are identified by one or more namespaces instead of Layers or 'Onion Peels' because
+it is the simplest way to communicate any architecture - no matter what the implementation details of it are.
 
 ```php
 public function testArchitecture()
@@ -53,16 +67,14 @@ public function testArchitecture()
 }
 ```
 
-## Notes
+Most of defining an architecture is only syntactic sugar over the namespace validators above.
+The following methods allow you to add assertions to your component structure:
 
-This is only a rough implementation to see if this is even possible.
-
-It is.
+- `mustNotDependOn`
+- `mustNotBeDependedOnBy`
+- `mustOnlyDependOn`
 
 ## TODO
 
-- Document things
-- Clean up API
-- Add some more validation rules
 - Add tests
 - Publish to packagist
