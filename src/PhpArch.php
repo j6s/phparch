@@ -39,9 +39,15 @@ class PhpArch
 
             foreach ($analysis->getAdts() as $adt) {
                 $from = $adt->getDeclaredNamespace()->toString();
+                if (!class_exists($from)) {
+                    continue;
+                }
 
                 foreach ($adt->getCalledNamespaces() as $namespace) {
                     $to = $namespace->toString();
+                    if (!class_exists($to)) {
+                        continue;
+                    }
 
                     if (!$this->validator->isValidBetween($from, $to)) {
                         $errors[] = $this->validator->getErrorMessage($from, $to);
