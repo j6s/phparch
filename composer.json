@@ -9,8 +9,8 @@
         }
     ],
     "require": {
-        "nikic/php-parser": "^4.1",
-        "symfony/finder": "^4.1"
+        "nikic/php-parser": "~2.0|~3.0|~4.0",
+        "symfony/finder": "^3.4|^4.1"
     },
     "autoload": {
         "psr-4": {
