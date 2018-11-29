@@ -1,6 +1,7 @@
 {
     "name": "j6s/phparch",
     "description": "Architecture Testing for PHP projects",
+    "license": "MIT",
     "authors": [
         {
             "name": "Johannes Hertenstein",
