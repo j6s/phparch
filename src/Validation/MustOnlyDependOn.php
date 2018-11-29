@@ -4,10 +4,14 @@ namespace J6s\PhpArch\Validation;
 
 
 use J6s\PhpArch\Utility\NamespaceComperator;
+use J6s\PhpArch\Utility\NamespaceComperatorCollection;
 
 /**
  * Validates that the given namespace only depends on the given destination namespace
  * or itself.
+ *
+ * If an array is supplied as the second argument then the first namespace must only depend on
+ * any of the second namespaces.
  */
 class MustOnlyDependOn implements Validator
 {
@@ -15,19 +19,25 @@ class MustOnlyDependOn implements Validator
     /** @var NamespaceComperator */
     private $from;
 
-    /** @var NamespaceComperator */
+    /** @var NamespaceComperatorCollection */
     private $to;
 
     /** @var string */
     private $message;
 
+    /**
+     * MustOnlyDependOn constructor.
+     * @param string $from
+     * @param string|string[] $to
+     * @param string $message
+     */
     public function __construct(
         string $from,
-        string $to,
+        $to,
         string $message = ':from must only depend on :to but :violatingFrom depends on :violatingTo'
     ) {
         $this->from = new NamespaceComperator($from);
-        $this->to = new NamespaceComperator($to);
+        $this->to = new NamespaceComperatorCollection($to);
         $this->message = $message;
     }
 
@@ -37,14 +47,14 @@ class MustOnlyDependOn implements Validator
             return true;
         }
 
-        return $this->to->matches($to) || $this->from->matches($to);
+        return $this->to->matchesAny($to) || $this->from->matches($to);
     }
 
     public function getErrorMessage(string $from, string $to): string
     {
         return str_replace(
             [ ':from', ':to', ':violatingFrom', ':violatingTo' ],
-            [ $this->from->getNamespace(), $this->to->getNamespace(), $from, $to ],
+            [ $this->from, $this->to, $from, $to ],
             $this->message
         );
     }

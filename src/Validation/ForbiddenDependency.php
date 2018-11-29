@@ -35,7 +35,7 @@ class ForbiddenDependency implements Validator
     {
         return str_replace(
             [ ':from', ':to', ':violatingFrom', ':violatingTo' ],
-            [ $this->from->getNamespace(), $this->to->getNamespace(), $from, $to ],
+            [ $this->from, $this->to, $from, $to ],
             $this->message
         );
     }

@@ -12,7 +12,7 @@ class NamespaceComperator
         $this->comparison = explode('\\', trim($comparison, '\\'));
     }
 
-    public function getNamespace(): string
+    public function __toString(): string
     {
         return implode('\\', $this->comparison);
     }
