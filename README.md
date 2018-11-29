@@ -16,12 +16,6 @@ It can be used to help enforce architectural boundaries in an application in ord
 to prevent the architecture from rotting over time by introducing dependencies across
 previously well defined architectural boundaries.
 
-This library is strongly based on [mamuz/php-dependency-analysis](https://github.com/mamuz/PhpDependencyAnalysis)
-which does all of the heavy lifting that is associated with analyzing the code. The two
-libraries have different focuses though:
-- phparch is focused on providing a testing utility to ensure architectural boundaries are kept.
-- php-dependency-analysis can be used to visualize the components in your system and their dependencies.
-
 ## Installation
 
 You can install PHPArch using composer.
@@ -92,3 +86,4 @@ The following methods allow you to add assertions to your component structure:
 ## TODO
 
 - Add tests
+- Implement visitor that extracts dependencies from DI frameworks

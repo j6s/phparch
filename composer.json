@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "mamuz/php-dependency-analysis": "^1.3"
+        "nikic/php-parser": "^4.1",
+        "symfony/finder": "^4.1"
     },
     "autoload": {
         "psr-4": {
