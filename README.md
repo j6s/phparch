@@ -33,14 +33,12 @@ Setup rules for which namespace is allowed for forbidden to depend on which othe
 ```php
 public function testSimpleNamespaces()
 {
-    $errors = (new PhpArch())
+    (new PhpArch())
         ->fromDirectory(__DIR__ . '/../../app')
         ->validate(new ForbiddenDependency('Lib\\', 'App\\'))
         ->validate(new MustBeSelfContained('App\\Utility'))
         ->validate(new MustOnlyDependOn('App\\Mailing', 'PHPMailer\\PHPMailer'))
-        ->errors();
-
-    $this->assertEmpty($errors);
+        ->assertHasNoErrors();
 }
 ```
 
@@ -67,12 +65,10 @@ public function testArchitecture()
         ->component('Components')->identifiedByNamespace('J6s\\PhpArch\\Component')
             ->mustNotDependOn('Validation');
     
-    $errors = (new PhpArch())
+    (new PhpArch())
         ->fromDirectory(__DIR__ . '/../../app')
         ->validate($architecture)
-        ->errors();
-
-    $this->assertEmpty($errors);
+        ->assertHasNoErrors();
 }
 ```
 
