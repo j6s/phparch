@@ -40,3 +40,5 @@ It is.
 - Document things
 - Clean up API
 - Add some more validation rules
+- Add tests
+- Publish to packagist
