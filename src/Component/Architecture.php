@@ -74,6 +74,20 @@ class Architecture extends ValidationCollection
         return $this;
     }
 
+    /**
+     * Declares that the currently selected component must only depend on the component with the
+     * given name or itself.
+     *
+     * @param string $name
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function mustOnlyDependOn(string $name): self
+    {
+        $this->getCurrent()->mustOnlyDependOn($this->ensureComponentExists($name));
+        return $this;
+    }
+
 
     private function getCurrent(): Component
     {

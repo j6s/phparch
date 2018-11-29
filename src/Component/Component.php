@@ -2,6 +2,7 @@
 namespace J6s\PhpArch\Component;
 
 use J6s\PhpArch\Validation\ForbiddenDependency;
+use J6s\PhpArch\Validation\MustOnlyDependOn;
 use J6s\PhpArch\Validation\ValidationCollection;
 use J6s\PhpArch\Validation\Validator;
 
@@ -24,6 +25,12 @@ class Component extends ValidationCollection
      */
     private $forbiddenDependencies = [];
 
+    /**
+     * The component which are the only allowed dependencies for the current component
+     * @var Component
+     */
+    private $mustOnlyDependOn;
+
     public function __construct(string $name)
     {
         parent::__construct();
@@ -33,6 +40,11 @@ class Component extends ValidationCollection
     public function mustNotDependOn(Component $component): void
     {
         $this->forbiddenDependencies[] = $component;
+    }
+
+    public function mustOnlyDependOn(Component $component): void
+    {
+        $this->mustOnlyDependOn = $component;
     }
 
     public function getNamespaces(): array
@@ -61,6 +73,18 @@ class Component extends ValidationCollection
                 foreach ($forbiddenDependency->getNamespaces() as $toNamespace) {
                     $validators[] = new ForbiddenDependency($fromNamespace, $toNamespace, $message);
                 }
+            }
+        }
+
+        if ($this->mustOnlyDependOn) {
+            $namespacesToOnlyDependOn = \array_merge($this->mustOnlyDependOn->getNamespaces(), $this->namespaces);
+            foreach ($this->namespaces as $namespace) {
+                $validators[] = new MustOnlyDependOn(
+                    $namespace,
+                    $namespacesToOnlyDependOn,
+                    $this . ' must only depend on ' . $this->mustOnlyDependOn .
+                    ' but :violatingFrom depends on :violatingTo'
+                );
             }
         }
 
