@@ -1,6 +1,7 @@
 # PHPArch
 
 - [What is this?](#what-is-this)
+- [Installation](#installation)
 - [Simple Namespace validation](#simple-namespace-validation)
     - [Available Validators](#available-validators)
 - [Defining an architecture](#defining-an-architecture)
@@ -20,6 +21,15 @@ which does all of the heavy lifting that is associated with analyzing the code. 
 libraries have different focuses though:
 - phparch is focused on providing a testing utility to ensure architectural boundaries are kept.
 - php-dependency-analysis can be used to visualize the components in your system and their dependencies.
+
+## Installation
+
+You can install PHPArch using composer.
+If you don't know what composer is then you probably don't need a library for architectural testing.
+
+```bash
+$ composer require j6s/phparch
+```
 
 ## Simple Namespace validation
 
