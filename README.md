@@ -21,38 +21,36 @@ libraries have different focuses though:
 ### Validation of simple namespaces
 
 ```php
-    public function testSimpleNamespaces()
-    {
-        $errors = (new PhpArch())
-            ->fromDirectory(__DIR__ . '/../../app')
-            ->validate(new ForbiddenDependency('Lib\\', 'App\\'))
-            ->validate(new MustBeSelfContained('App\\Utility'))
-            ->validate(new MustOnlyDependOn('App\\Mailing', 'PHPMailer\\PHPMailer'))
-            ->errors();
+public function testSimpleNamespaces()
+{
+    $errors = (new PhpArch())
+        ->fromDirectory(__DIR__ . '/../../app')
+        ->validate(new ForbiddenDependency('Lib\\', 'App\\'))
+        ->validate(new MustBeSelfContained('App\\Utility'))
+        ->validate(new MustOnlyDependOn('App\\Mailing', 'PHPMailer\\PHPMailer'))
+        ->errors();
 
-        $this->assertEmpty($errors);
-    }
+    $this->assertEmpty($errors);
+}
 ```
 
 ### Validating an architecture
 
 ```php
-    public function testArchitecture()
-    {
-        $architecture = (new Architecture())
-            ->component('Components')
-            ->identifiedByNamespace('J6s\\PhpArch\\Component')
-            ->component('Validation')
-            ->identifiedByNamespace('J6s\\PhpArch\\Validation')
+public function testArchitecture()
+{
+    $architecture = (new Architecture())
+        ->component('Validation')->identifiedByNamespace('J6s\\PhpArch\\Validation')
+        ->component('Components')->identifiedByNamespace('J6s\\PhpArch\\Component')
             ->mustNotDependOn('Validation');
-        
-        $errors = (new PhpArch())
-            ->fromDirectory(__DIR__ . '/../../app')
-            ->validate($architecture)
-            ->errors();
+    
+    $errors = (new PhpArch())
+        ->fromDirectory(__DIR__ . '/../../app')
+        ->validate($architecture)
+        ->errors();
 
-        $this->assertEmpty($errors);
-    }
+    $this->assertEmpty($errors);
+}
 ```
 
 ## Notes
