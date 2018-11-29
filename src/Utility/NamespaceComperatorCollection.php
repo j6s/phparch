@@ -2,7 +2,6 @@
 
 namespace J6s\PhpArch\Utility;
 
-
 class NamespaceComperatorCollection
 {
 
@@ -18,7 +17,9 @@ class NamespaceComperatorCollection
             $namespaces = [ $namespaces ];
         }
         $this->comperators = array_map(
-            function(string $namespace) { return new NamespaceComperator($namespace); },
+            function (string $namespace) {
+                return new NamespaceComperator($namespace);
+            },
             $namespaces
         );
     }
@@ -37,5 +38,4 @@ class NamespaceComperatorCollection
     {
         return '[' . implode(', ', $this->comperators) . ']';
     }
-
 }

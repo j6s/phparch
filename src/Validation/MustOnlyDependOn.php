@@ -2,7 +2,6 @@
 
 namespace J6s\PhpArch\Validation;
 
-
 use J6s\PhpArch\Utility\NamespaceComperator;
 use J6s\PhpArch\Utility\NamespaceComperatorCollection;
 
