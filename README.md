@@ -82,4 +82,3 @@ The following methods allow you to add assertions to your component structure:
 ## TODO
 
 - Add tests
-- Publish to packagist
