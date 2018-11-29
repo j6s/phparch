@@ -16,7 +16,9 @@ libraries have different focuses though:
 - phparch is focused on providing a testing utility to ensure architectural boundaries are kept.
 - php-dependency-analysis can be used to visualize the components in your system and their dependencies.
 
-## Example
+## Examples
+
+### Validation of simple namespaces
 
 ```php
     public function testLibraryCodeDoesNotDependOnApplicationCode()
@@ -26,6 +28,27 @@ libraries have different focuses though:
             ->validate(new ForbiddenDependency('Lib\\', 'App\\'))
             ->errors();
         $this->assertEmpty($errors);
+    }
+```
+
+### Validating an architecture
+
+```php
+    public function testArchitecture()
+    {
+        $architecture = (new Architecture())
+            ->component('Components')
+            ->identifiedByNamespace('J6s\\PhpArch\\Component')
+            ->component('Validation')
+            ->identifiedByNamespace('J6s\\PhpArch\\Validation')
+            ->mustNotDependOn('Validation');
+        
+            $errors = (new PhpArch())
+                ->fromDirectory(__DIR__ . '/../../app')
+                ->validate($architecture)
+                ->errors();
+
+            $this->assertEmpty($errors);
     }
 ```
 
