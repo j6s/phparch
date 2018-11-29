@@ -6,6 +6,7 @@ use J6s\PhpArch\Validation\ValidationCollection;
 use J6s\PhpArch\Validation\Validator;
 use PhpParser\ParserFactory;
 use Symfony\Component\Finder\Finder;
+use PHPUnit\Framework\Assert;
 
 class PhpArch
 {
@@ -18,6 +19,17 @@ class PhpArch
     public function __construct()
     {
         $this->validator = new ValidationCollection();
+    }
+
+    /**
+     * Asserts that the currently configured validations have no errors.
+     * This method is intended to be used inside of a PHPUnit test case and
+     * will only work if PHPUnit was installed separately from phparch.
+     */
+    public function assertHasNoErrors(): void
+    {
+        $errors = $this->errors();
+        Assert::assertEmpty($errors, implode("\n", $errors));
     }
 
     /**
