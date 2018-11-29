@@ -18,7 +18,7 @@ class ForbiddenDependency implements Validator
     public function __construct(
         string $from,
         string $to,
-        string $message = 'There must not be any dependency from :fromNamespace to :toNamespace' .
+        string $message = 'There must not be any dependency from :from to :to' .
         'but :violatingFrom depends on :violatingTo'
     ) {
         $this->from = new NamespaceComperator($from);

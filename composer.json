@@ -9,7 +9,11 @@
         }
     ],
     "require": {
-        "mamuz/php-dependency-analysis": "^1.3"
+        "nikic/php-parser": "~2.0|~3.0|~4.0",
+        "symfony/finder": "^3.4|^4.1"
+    },
+    "suggest": {
+        "phpunit/phpunit": "For assertion helpers to work correctly."
     },
     "autoload": {
         "psr-4": {

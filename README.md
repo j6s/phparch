@@ -1,6 +1,7 @@
 # PHPArch
 
 - [What is this?](#what-is-this)
+- [Installation](#installation)
 - [Simple Namespace validation](#simple-namespace-validation)
     - [Available Validators](#available-validators)
 - [Defining an architecture](#defining-an-architecture)
@@ -15,11 +16,14 @@ It can be used to help enforce architectural boundaries in an application in ord
 to prevent the architecture from rotting over time by introducing dependencies across
 previously well defined architectural boundaries.
 
-This library is strongly based on [mamuz/php-dependency-analysis](https://github.com/mamuz/PhpDependencyAnalysis)
-which does all of the heavy lifting that is associated with analyzing the code. The two
-libraries have different focuses though:
-- phparch is focused on providing a testing utility to ensure architectural boundaries are kept.
-- php-dependency-analysis can be used to visualize the components in your system and their dependencies.
+## Installation
+
+You can install PHPArch using composer.
+If you don't know what composer is then you probably don't need a library for architectural testing.
+
+```bash
+$ composer require j6s/phparch
+```
 
 ## Simple Namespace validation
 
@@ -29,14 +33,12 @@ Setup rules for which namespace is allowed for forbidden to depend on which othe
 ```php
 public function testSimpleNamespaces()
 {
-    $errors = (new PhpArch())
+    (new PhpArch())
         ->fromDirectory(__DIR__ . '/../../app')
         ->validate(new ForbiddenDependency('Lib\\', 'App\\'))
         ->validate(new MustBeSelfContained('App\\Utility'))
         ->validate(new MustOnlyDependOn('App\\Mailing', 'PHPMailer\\PHPMailer'))
-        ->errors();
-
-    $this->assertEmpty($errors);
+        ->assertHasNoErrors();
 }
 ```
 
@@ -63,12 +65,10 @@ public function testArchitecture()
         ->component('Components')->identifiedByNamespace('J6s\\PhpArch\\Component')
             ->mustNotDependOn('Validation');
     
-    $errors = (new PhpArch())
+    (new PhpArch())
         ->fromDirectory(__DIR__ . '/../../app')
         ->validate($architecture)
-        ->errors();
-
-    $this->assertEmpty($errors);
+        ->assertHasNoErrors();
 }
 ```
 
@@ -82,3 +82,4 @@ The following methods allow you to add assertions to your component structure:
 ## TODO
 
 - Add tests
+- Implement visitor that extracts dependencies from DI frameworks
