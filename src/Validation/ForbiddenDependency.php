@@ -19,7 +19,7 @@ class ForbiddenDependency implements Validator
         string $from,
         string $to,
         string $message = 'There must not be any dependency from :fromNamespace to :toNamespace' .
-            'but :violatingFrom depends on :violatingTo'
+        'but :violatingFrom depends on :violatingTo'
     ) {
         $this->from = new NamespaceComperator($from);
         $this->to = new NamespaceComperator($to);

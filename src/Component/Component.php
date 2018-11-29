@@ -1,7 +1,6 @@
 <?php
 namespace J6s\PhpArch\Component;
 
-
 use J6s\PhpArch\Validation\ForbiddenDependency;
 use J6s\PhpArch\Validation\ValidationCollection;
 use J6s\PhpArch\Validation\Validator;

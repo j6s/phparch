@@ -52,11 +52,11 @@ class ValidationCollection implements Validator
         return $this->validators;
     }
 
-    private function addError(string $from, string $to, string $message) {
+    private function addError(string $from, string $to, string $message)
+    {
         if (!array_key_exists($from . $to, $this->errors)) {
             $this->errors[$from . $to] = [];
         }
         $this->errors[$from . $to][] = $message;
     }
-
 }
