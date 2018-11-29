@@ -21,11 +21,12 @@ libraries have different focuses though:
 ### Validation of simple namespaces
 
 ```php
-    public function testLibraryCodeDoesNotDependOnApplicationCode()
+    public function testSimpleNamespaces()
     {
         $errors = (new PhpArch())
             ->fromDirectory(__DIR__ . '/../../app')
             ->validate(new ForbiddenDependency('Lib\\', 'App\\'))
+            ->validate(new MustBeSelfContained('App\\Utility'))
             ->errors();
 
         $this->assertEmpty($errors);
