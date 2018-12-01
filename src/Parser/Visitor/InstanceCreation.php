@@ -1,10 +1,10 @@
 <?php
-namespace J6s\PhpArch\Parser;
+namespace J6s\PhpArch\Parser\Visitor;
 
 
 use PhpParser\Node;
 
-class InstanceCreationVisitor extends NamespaceCollectingVisitor
+class InstanceCreation extends NamespaceCollectingVisitor
 {
 
     public function enterNode(Node $node)
