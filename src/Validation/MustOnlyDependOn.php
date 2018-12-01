@@ -42,11 +42,11 @@ class MustOnlyDependOn implements Validator
 
     public function isValidBetween(string $from, string $to): bool
     {
-        if (!$this->from->matches($from)) {
+        if (!$this->from->contains($from)) {
             return true;
         }
 
-        return $this->to->matchesAny($to) || $this->from->matches($to);
+        return $this->to->containsAny($to) || $this->from->contains($to);
     }
 
     public function getErrorMessage(string $from, string $to): string
