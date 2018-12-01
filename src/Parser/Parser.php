@@ -2,9 +2,9 @@
 namespace J6s\PhpArch\Parser;
 
 
-use J6s\PhpArch\Parser\Visitor\ExtractClassExtensions;
+use J6s\PhpArch\Parser\Visitor\DocBlockTypeAnnotations;
 use J6s\PhpArch\Parser\Visitor\ExtractDeclaredNamespace;
-use J6s\PhpArch\Parser\Visitor\InstanceCreation;
+use J6s\PhpArch\Parser\Visitor\FullyQualifiedReference;
 use J6s\PhpArch\Parser\Visitor\NamespaceCollectingVisitor;
 use J6s\PhpArch\Parser\Visitor\UseStatement;
 use PhpParser\NodeTraverser;
@@ -62,9 +62,10 @@ class Parser
      */
     private function usageExtractors(): array {
         return [
-            new ExtractClassExtensions(),
+            new ExtractDeclaredNamespace(),
+            new FullyQualifiedReference(),
             new UseStatement(),
-            new InstanceCreation()
+            new DocBlockTypeAnnotations(),
         ];
     }
 
