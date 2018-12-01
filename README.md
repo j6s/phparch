@@ -78,8 +78,3 @@ The following methods allow you to add assertions to your component structure:
 - `mustNotDependOn`
 - `mustNotBeDependedOnBy`
 - `mustOnlyDependOn`
-
-## TODO
-
-- Add tests
-- Implement visitor that extracts dependencies from DI frameworks
