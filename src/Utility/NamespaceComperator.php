@@ -34,8 +34,14 @@ class NamespaceComperator
     public function contains(string $namespace): bool
     {
         $parts = explode('\\', trim($namespace, '\\'));
-        $end = min(\count($parts), \count($this->comparison));
 
+        // If the comperator namespace is more specific than the compared namespace
+        // then there is no way that the compared namespace can be inside of it.
+        if (\count($this->comparison) > \count($parts)) {
+            return false;
+        }
+
+        $end = min(\count($parts), \count($this->comparison));
         for ($i = 0; $i < $end; $i++) {
             if ($this->comparison[$i] !== $parts[$i]) {
                 return false;
