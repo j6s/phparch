@@ -62,7 +62,6 @@ class Parser
      */
     private function usageExtractors(): array {
         return [
-            new ExtractDeclaredNamespace(),
             new FullyQualifiedReference(),
             new UseStatement(),
             new DocBlockTypeAnnotations(),
