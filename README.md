@@ -1,4 +1,4 @@
-# PHPArch
+# PHPArch [![Build Status](https://travis-ci.org/j6s/phparch.svg?branch=development)](https://travis-ci.org/j6s/phparch)
 
 - [What is this?](#what-is-this)
 - [Installation](#installation)
@@ -78,8 +78,3 @@ The following methods allow you to add assertions to your component structure:
 - `mustNotDependOn`
 - `mustNotBeDependedOnBy`
 - `mustOnlyDependOn`
-
-## TODO
-
-- Add tests
-- Implement visitor that extracts dependencies from DI frameworks

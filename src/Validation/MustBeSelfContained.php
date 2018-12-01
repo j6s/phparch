@@ -28,11 +28,11 @@ class MustBeSelfContained implements Validator
 
     public function isValidBetween(string $from, string $to): bool
     {
-        if (!$this->namespace->matchesAny($from)) {
+        if (!$this->namespace->containsAny($from)) {
             return true;
         }
 
-        return $this->namespace->matchesAny($to);
+        return $this->namespace->containsAny($to);
     }
 
     public function getErrorMessage(string $from, string $to): string

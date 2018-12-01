@@ -28,7 +28,7 @@ class ForbiddenDependency implements Validator
 
     public function isValidBetween(string $from, string $to): bool
     {
-        return !$this->from->matches($from) || !$this->to->matches($to);
+        return !$this->from->contains($from) || !$this->to->contains($to);
     }
 
     public function getErrorMessage(string $from, string $to): string
