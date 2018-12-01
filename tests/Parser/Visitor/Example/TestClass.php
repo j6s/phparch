@@ -2,31 +2,52 @@
 namespace J6s\PhpArch\Tests\Parser\Visitor\Example;
 
 use Foo\Bar\Baz;
-use Foo\Bar\ImportedInstanceCreation;
-use Foo\Bar\ImportedStaticMethodCall;
-use \Foo\Bar\ImportedArgumentAnnotation;
-use \Foo\Bar\ImportedReturnAnnotation;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\InstanceCreation\ImportedInstanceCreation;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\TypeAnnotation\ImportedArgumentAnnotation;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\TypeAnnotation\ImportedReturnTypeAnnotation;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\StaticMethodCall\ImportedStaticMethodCall;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockArgument;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockReturn;
 
-class TestClass extends \Foo\Bar\ParentClass implements \Foo\Bar\SomeInterface
+class TestClass extends ParentClass implements SomeInterface
 {
     public function instanceCreation()
     {
-        new \Foo\Bar\InstanceCreation();
+        new InstanceCreation\InstanceCreation();
         new ImportedInstanceCreation();
     }
 
     public function staticMethodCall()
     {
-        \Foo\Bar\StaticMethodCall::method();
+        StaticMethodCall\StaticMethodCall::method();
         ImportedStaticMethodCall::method();
     }
 
-    public function typeAnnotated(\Foo\Bar\ArgumentAnnotation $argument): \Foo\Bar\ReturnAnnotation
+    public function typeAnnotated(TypeAnnotation\ArgumentAnnotation $argument): TypeAnnotation\ReturnTypeAnnotation
     {
 
     }
 
-    public function typeAnnotatedImported(ImportedArgumentAnnotation $annotation): ImportedReturnAnnotation
+    public function typeAnnotatedImported(ImportedArgumentAnnotation $annotation): ImportedReturnTypeAnnotation
+    {
+
+    }
+
+    /**
+     * @param \J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockArgument $argument
+     * @return \J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockReturn
+     */
+    public function docBlock($argument)
+    {
+
+    }
+
+
+    /**
+     * @param ImportedDocBlockArgument $argument
+     * @return ImportedDocBlockReturn
+     */
+    public function importedDocBlock($argument)
     {
 
     }

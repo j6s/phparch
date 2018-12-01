@@ -10,7 +10,8 @@
     ],
     "require": {
         "nikic/php-parser": "~2.0|~3.0|~4.0",
-        "symfony/finder": "^3.4|^4.1"
+        "symfony/finder": "^3.4|^4.1",
+        "phpdocumentor/reflection-docblock": "^4.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.4"

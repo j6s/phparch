@@ -13,7 +13,7 @@ class ExtractClassExtensionsTest extends TestCase
         $visitor = new ExtractClassExtensions();
         $this->parseAndTraverseFileContents(__DIR__ . '/Example/TestClass.php', $visitor);
         $this->assertContains(
-            'Foo\\Bar\\ParentClass',
+            'J6s\PhpArch\Tests\Parser\Visitor\Example\ParentClass',
             $visitor->getNamespaces()
         );
     }
@@ -23,7 +23,7 @@ class ExtractClassExtensionsTest extends TestCase
         $visitor = new ExtractClassExtensions();
         $this->parseAndTraverseFileContents(__DIR__ . '/Example/TestClass.php', $visitor);
         $this->assertContains(
-            'Foo\\Bar\\SomeInterface',
+            'J6s\PhpArch\Tests\Parser\Visitor\Example\SomeInterface',
             $visitor->getNamespaces()
         );
     }

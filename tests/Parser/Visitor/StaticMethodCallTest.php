@@ -2,6 +2,7 @@
 namespace J6s\PhpArch\Tests\Parser\Visitor;
 
 use J6s\PhpArch\Parser\Visitor\StaticMethodCall;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\StaticMethodCall\ImportedStaticMethodCall;
 use J6s\PhpArch\Tests\TestCase;
 
 class StaticMethodCallTest extends TestCase
@@ -12,7 +13,7 @@ class StaticMethodCallTest extends TestCase
         $visitor = new StaticMethodCall();
         $this->parseAndTraverseFileContents(__DIR__ . '/Example/TestClass.php', $visitor);
         $this->assertContains(
-            'Foo\Bar\StaticMethodCall',
+            Example\StaticMethodCall\StaticMethodCall::class,
             $visitor->getNamespaces()
         );
     }
@@ -23,7 +24,7 @@ class StaticMethodCallTest extends TestCase
         $visitor = new StaticMethodCall();
         $this->parseAndTraverseFileContents(__DIR__ . '/Example/TestClass.php', $visitor);
         $this->assertContains(
-            'Foo\Bar\ImportedStaticMethodCall',
+            ImportedStaticMethodCall::class,
             $visitor->getNamespaces()
         );
     }

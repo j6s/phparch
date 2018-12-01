@@ -22,22 +22,22 @@ class TypeAnnotationTest extends TestCase
 
     public function testExtractsArgumentAnnotations(): void
     {
-        $this->assertContains('Foo\Bar\ArgumentAnnotation', $this->extracted);
+        $this->assertContains(Example\TypeAnnotation\ArgumentAnnotation::class, $this->extracted);
     }
 
     public function testExtractsImportedArgumentAnnotations(): void
     {
-        $this->assertContains('Foo\Bar\ImportedArgumentAnnotation', $this->extracted);
+        $this->assertContains(Example\TypeAnnotation\ImportedArgumentAnnotation::class, $this->extracted);
     }
 
     public function testExtractsReturnTypeAnnotations(): void
     {
-        $this->assertContains('Foo\Bar\ReturnAnnotation', $this->extracted);
+        $this->assertContains(Example\TypeAnnotation\ReturnTypeAnnotation::class, $this->extracted);
     }
 
     public function testExtractsImportedReturnTypeAnnotations(): void
     {
-        $this->assertContains('Foo\Bar\ImportedReturnAnnotation', $this->extracted);
+        $this->assertContains(Example\TypeAnnotation\ImportedReturnTypeAnnotation::class, $this->extracted);
     }
 
 

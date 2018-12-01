@@ -3,6 +3,7 @@ namespace J6s\PhpArch\Tests\Parser\Visitor;
 
 
 use J6s\PhpArch\Parser\Visitor\InstanceCreation;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\InstanceCreation\ImportedInstanceCreation;
 use J6s\PhpArch\Tests\TestCase;
 
 class InstanceCreationTest extends TestCase
@@ -13,7 +14,7 @@ class InstanceCreationTest extends TestCase
         $visitor = new InstanceCreation();
         $this->parseAndTraverseFileContents(__DIR__ . '/Example/TestClass.php', $visitor);
         $this->assertContains(
-            'Foo\\Bar\\InstanceCreation',
+            Example\InstanceCreation\InstanceCreation::class,
             $visitor->getNamespaces()
         );
     }
@@ -23,7 +24,7 @@ class InstanceCreationTest extends TestCase
         $visitor = new InstanceCreation();
         $this->parseAndTraverseFileContents(__DIR__ . '/Example/TestClass.php', $visitor);
         $this->assertContains(
-            'Foo\\Bar\\ImportedInstanceCreation',
+            ImportedInstanceCreation::class,
             $visitor->getNamespaces()
         );
     }
