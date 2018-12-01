@@ -1,4 +1,4 @@
-# PHPArch
+# PHPArch [![Build Status](https://travis-ci.org/j6s/phparch.svg?branch=development)](https://travis-ci.org/j6s/phparch)
 
 - [What is this?](#what-is-this)
 - [Installation](#installation)
