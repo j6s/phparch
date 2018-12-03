@@ -37,6 +37,6 @@ class MustBeSelfContained implements Validator
 
     public function getErrorMessage(string $from, string $to): string
     {
-        return $this->namespace->getNamespace() . ' must be selfcontained, but ' . $from . ' depends on ' . $to;
+        return $this->namespace . ' must be selfcontained, but ' . $from . ' depends on ' . $to;
     }
 }
