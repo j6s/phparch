@@ -18,6 +18,11 @@ class Architecture extends ValidationCollection
     private $currentComponent;
 
     /**
+     * @var Component
+     */
+    private $lastComponent;
+
+    /**
      * Adds or selects a component that is identified by the given name.
      * Any subsequent declarations of dependencies reference the component with that name.
      *
@@ -26,7 +31,9 @@ class Architecture extends ValidationCollection
      */
     public function component(string $name): self
     {
-        $this->currentComponent = $this->ensureComponentExists($name);
+        $this->setCurrent(
+            $this->ensureComponentExists($name)
+        );
         return $this;
     }
 
@@ -49,14 +56,42 @@ class Architecture extends ValidationCollection
      * with the given name. The declaration of this rule can be made before the second component
      * is defined.
      *
+     * @example
+     * (new Architecture)
+     *      ->component('Logic')->identifiedByNamespace('App\\Logic')
+     *      ->mustNotDependOn('IO')->identifiedByNamespace('App\\IO')
+     *
      * @param string $name
      * @return Architecture
      * @throws ComponentNotDefinedException
      */
     public function mustNotDependOn(string $name): self
     {
-        $this->getCurrent()->mustNotDependOn($this->ensureComponentExists($name));
+        $component = $this->ensureComponentExists($name);
+        $this->getCurrent()->mustNotDependOn($component);
+        $this->setCurrent($component);
         return $this;
+    }
+
+    /**
+     * Same as `mustNotDependOn` but refenrences the previous component.
+     * This is helpful for 'speaking' chaining.
+     *
+     * @example
+     * (new Architecture)
+     *      ->component('Logic')->identifiedByNamespace('App\\Logic')
+     *      ->mustNotDependOn('IO')
+     *      ->andMustNotDependOn('Controllers')
+     *
+     *
+     * @param string $name
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function andMustNotDependOn(string $name): self
+    {
+        $this->restoreLast();
+        return $this->mustNotDependOn($name);
     }
 
     /**
@@ -64,14 +99,43 @@ class Architecture extends ValidationCollection
      * with the given name. The declaration of this rule can be made before the second component
      * is defined.
      *
+     * @example
+     * (new Architecture)
+     *      ->component('IO')->identifiedByNamespace('App\\IO')
+     *      ->mustNotBeDependedOnBy('Logic')->identifiedBy('App\\Logic');
+     *
      * @param string $name
      * @return Architecture
      * @throws ComponentNotDefinedException
      */
     public function mustNotBeDependedOnBy(string $name): self
     {
-        $this->ensureComponentExists($name)->mustNotDependOn($this->getCurrent());
+        $component = $this->ensureComponentExists($name);
+        $component->mustNotDependOn($this->getCurrent());
+        $this->setCurrent($component);
         return $this;
+    }
+
+
+    /**
+     * Same as `mustNotBeDependedOnBy` but refenrences the previous component.
+     * This is helpful for 'speaking' chaining.
+     *
+     * @example
+     * @example
+     * (new Architecture)
+     *      ->component('IO')->identifiedByNamespace('App\\IO')
+     *      ->mustNotBeDependedOnBy('Logic')
+     *      ->andMustNotBeDependedOnBy('Controllers')
+     *
+     * @param string $name
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function andMustNotBeDependedOnBy(string $name): self
+    {
+        $this->restoreLast();
+        return $this->mustNotBeDependedOnBy($name);
     }
 
     /**
@@ -84,7 +148,9 @@ class Architecture extends ValidationCollection
      */
     public function mustOnlyDependOn(string $name): self
     {
-        $this->getCurrent()->mustOnlyDependOn($this->ensureComponentExists($name));
+        $component = $this->ensureComponentExists($name);
+        $this->getCurrent()->mustOnlyDependOn($component);
+        $this->setCurrent($component);
         return $this;
     }
 
@@ -104,5 +170,17 @@ class Architecture extends ValidationCollection
             $this->addValidator($this->components[$name]);
         }
         return $this->components[$name];
+    }
+
+    private function restoreLast(): void
+    {
+        $this->currentComponent = $this->lastComponent;
+        $this->lastComponent = null;
+    }
+
+    private function setCurrent(Component $component): void
+    {
+        $this->lastComponent = $this->currentComponent;
+        $this->currentComponent = $component;
     }
 }
