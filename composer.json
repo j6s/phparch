@@ -23,7 +23,11 @@
     },
     "autoload": {
         "psr-4": {
-            "J6s\\PhpArch\\": "src/",
+            "J6s\\PhpArch\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "J6s\\PhpArch\\Tests\\": "tests/"
         }
     }
