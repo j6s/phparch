@@ -16,7 +16,9 @@ class FullyQualifiedReference extends NamespaceCollectingVisitor
     public function enterNode(Node $node)
     {
         if ($node instanceof Node\Name\FullyQualified) {
-            if ($node->isFullyQualified() && class_exists((string) $node)) {
+            $string = (string) $node;
+            $exists = class_exists($string) || interface_exists($string) || trait_exists($string);
+            if ($exists) {
                 $this->namespaces[] = (string) $node;
             }
         }

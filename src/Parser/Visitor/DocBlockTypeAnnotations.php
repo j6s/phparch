@@ -61,7 +61,7 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
     private function fqnIfClassExists(string $type): ?string
     {
         $toCheck = trim($type, '\\');
-        if (class_exists($toCheck)) {
+        if (class_exists($toCheck) || interface_exists($toCheck) || trait_exists($toCheck)) {
             return $toCheck;
         }
         return null;
