@@ -1,7 +1,6 @@
 <?php
 namespace J6s\PhpArch\Parser;
 
-
 use J6s\PhpArch\Parser\Visitor\DocBlockTypeAnnotations;
 use J6s\PhpArch\Parser\Visitor\ExtractDeclaredNamespace;
 use J6s\PhpArch\Parser\Visitor\FullyQualifiedReference;
@@ -60,12 +59,12 @@ class Parser
     /**
      * @return NamespaceCollectingVisitor[]
      */
-    private function usageExtractors(): array {
+    private function usageExtractors(): array
+    {
         return [
             new FullyQualifiedReference(),
             new UseStatement(),
             new DocBlockTypeAnnotations(),
         ];
     }
-
 }

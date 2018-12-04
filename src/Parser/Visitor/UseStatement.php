@@ -1,7 +1,6 @@
 <?php
 namespace J6s\PhpArch\Parser\Visitor;
 
-
 use PhpParser\Node;
 
 class UseStatement extends NamespaceCollectingVisitor

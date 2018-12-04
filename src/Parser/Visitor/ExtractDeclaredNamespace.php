@@ -1,7 +1,6 @@
 <?php
 namespace J6s\PhpArch\Parser\Visitor;
 
-
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 
@@ -27,5 +26,4 @@ class ExtractDeclaredNamespace extends NodeVisitorAbstract
     {
         return trim($this->declared, '\\');
     }
-
 }

@@ -66,5 +66,4 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
         }
         return null;
     }
-
 }
