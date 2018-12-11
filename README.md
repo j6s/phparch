@@ -5,10 +5,9 @@
 - [Simple Namespace validation](#simple-namespace-validation)
     - [Available Validators](#available-validators)
 - [Defining an architecture](#defining-an-architecture)
-- [Examples](#examples)
     - [Syntactic sugar: Bulk definition of components](#syntactic-sugar-bulk-definition-of-components)
     - [Syntactic sugar: Chaining multiple dependency rules](#syntactic-sugar-chaining-multiple-dependency-rules)
-
+- [Examples](#examples)
 ## What is this?
 
 PHPArch is a work in progress architectural testing library for PHP projects.
