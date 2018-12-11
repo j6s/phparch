@@ -18,12 +18,19 @@ class MustBeSelfContained implements Validator
     /** @var NamespaceComperatorCollection */
     protected $namespace;
 
+    /** @var string */
+    private $message;
+
     /**
      * @param string|string[] $namespace
+     * @param string $message
      */
-    public function __construct($namespace)
-    {
+    public function __construct(
+        $namespace,
+        string $message = ':namespace must be selfcontained, but :violatingFrom depends on :violatingTo'
+    ) {
         $this->namespace = new NamespaceComperatorCollection($namespace);
+        $this->message = $message;
     }
 
     public function isValidBetween(string $from, string $to): bool
@@ -37,6 +44,10 @@ class MustBeSelfContained implements Validator
 
     public function getErrorMessage(string $from, string $to): string
     {
-        return $this->namespace . ' must be selfcontained, but ' . $from . ' depends on ' . $to;
+        return str_replace(
+            [ ':namespace', ':violatingFrom', ':violatingTo' ],
+            [ $this->namespace, $from, $to ],
+            $this->message
+        );
     }
 }
