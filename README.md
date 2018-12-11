@@ -61,9 +61,8 @@ it is the simplest way to communicate any architecture - no matter what the impl
 public function testArchitecture()
 {
     $architecture = (new Architecture())
-        ->component('Validation')->identifiedByNamespace('J6s\\PhpArch\\Validation')
         ->component('Components')->identifiedByNamespace('J6s\\PhpArch\\Component')
-            ->mustNotDependOn('Validation');
+        ->mustNotDependOn('Validation')->identifiedByNamespace('J6s\\PhpArch\\Validation');
     
     (new PhpArch())
         ->fromDirectory(__DIR__ . '/../../app')
@@ -78,3 +77,26 @@ The following methods allow you to add assertions to your component structure:
 - `mustNotDependOn`
 - `mustNotBeDependedOnBy`
 - `mustOnlyDependOn`
+
+If a non-existing component is referenced in one of these methods then it will be created.
+These methods will also set the referenced component as the currently active one - so when using
+`->mustNotDependOn('FooBar')` all future operations reference the `FooBar` component.
+
+In order to chain multiple dependency rules for a single component there are some convinience
+methods available:
+
+- `andMustNotDependOn`
+- `andMustNotBeDependedOnBy`
+
+```php
+// This
+(new Architecture)
+    ->component('Foo')
+    ->mustNotDependOn('Bar')
+    ->andMustNotDependOn('Baz')
+
+// Is this same as this:
+(new Architecture())
+    ->component('Foo')->mustNotDependOn('Bar')
+    ->component('Foo')->mustNotDependOn('Baz')
+```

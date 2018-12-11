@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2018-12-12
+### Fixed
+- Not loading tests into production autoloader anymore
+- Now ignoring references to non-existent classes
+- Fixed Validators not being able to be serialized correctly for error output
+
 ## [0.3.0] - 2018-12-01
 ### Added
 - Now correctly identifies the following types of dependencies (though in most cases they have already been tracked through `use` statements):

@@ -11,7 +11,7 @@
     "require": {
         "php": "^7.1",
 
-        "nikic/php-parser": "~2.0|~3.0|~4.0",
+        "nikic/php-parser": "~3.0|~4.0",
         "symfony/finder": "^3.4|^4.1",
         "phpdocumentor/reflection-docblock": "^4.3"
     },
@@ -23,7 +23,11 @@
     },
     "autoload": {
         "psr-4": {
-            "J6s\\PhpArch\\": "src/",
+            "J6s\\PhpArch\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "J6s\\PhpArch\\Tests\\": "tests/"
         }
     }

@@ -1,7 +1,6 @@
 <?php
 namespace J6s\PhpArch\Parser\Visitor;
 
-
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 
@@ -13,7 +12,7 @@ class ExtractDeclaredNamespace extends NodeVisitorAbstract
 
     public function enterNode(Node $node)
     {
-        if ($node instanceof Node\Stmt\ClassLike && $node->namespacedName) {
+        if ($node instanceof Node\Stmt\ClassLike && $node->namespacedName !== null) {
             $this->declared = $node->namespacedName->toString();
         }
     }
@@ -27,5 +26,4 @@ class ExtractDeclaredNamespace extends NodeVisitorAbstract
     {
         return trim($this->declared, '\\');
     }
-
 }
