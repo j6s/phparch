@@ -18,7 +18,7 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
 
     public function enterNode(Node $node)
     {
-        if ($node instanceof Node\Stmt\ClassLike && $node->namespacedName) {
+        if ($node instanceof Node\Stmt\ClassLike && $node->namespacedName !== null) {
             $this->lastClass = $node->namespacedName->toString();
         } elseif ($node instanceof Node\Stmt\ClassMethod && $this->lastClass) {
             $contextFactory = new \phpDocumentor\Reflection\Types\ContextFactory();
@@ -37,7 +37,7 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
             $docBlock = $factory->create((string) $docBlockString);
 
             foreach ($docBlock->getTags() as $tag) {
-                if ($tag instanceof Param || $tag instanceof Return_) {
+                if (($tag instanceof Param || $tag instanceof Return_) && $tag->getType() !== null) {
                     $type = $this->typeToFullyQualified($tag->getType(), $context);
                     if ($type) {
                         $this->namespaces[] = $type;
@@ -54,8 +54,9 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
         }
 
         $typeWithoutBackslashes = trim((string)$type, '\\');
+        $resolved = (new TypeResolver())->resolve($typeWithoutBackslashes, $context);
         return $this->fqnIfClassExists($typeWithoutBackslashes) ?:
-            $this->fqnIfClassExists((new TypeResolver())->resolve($typeWithoutBackslashes, $context));
+            $this->fqnIfClassExists((string) $resolved);
     }
 
     private function fqnIfClassExists(string $type): ?string

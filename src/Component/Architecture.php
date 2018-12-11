@@ -13,12 +13,12 @@ class Architecture extends ValidationCollection
     private $components = [];
 
     /**
-     * @var Component
+     * @var Component|null
      */
     private $currentComponent;
 
     /**
-     * @var Component
+     * @var Component|null
      */
     private $lastComponent;
 
@@ -157,7 +157,7 @@ class Architecture extends ValidationCollection
 
     private function getCurrent(): Component
     {
-        if (!$this->currentComponent) {
+        if ($this->currentComponent === null) {
             throw new ComponentNotDefinedException('No current component exists');
         }
         return $this->currentComponent;

@@ -44,8 +44,13 @@ class PhpArch
         $finder = $this->getFinder();
 
         foreach ($finder->getIterator() as $file) {
+            $abstractSyntaxTree = $phpParser->parse($file->getContents());
+            if ($abstractSyntaxTree === null) {
+                continue;
+            }
+
             $astParser = new Parser();
-            $astParser->process($phpParser->parse($file->getContents()));
+            $astParser->process($abstractSyntaxTree);
 
             foreach ($astParser->getUsedNamespaces() as $namespace) {
                 if (!$this->validator->isValidBetween($astParser->getDeclaredNamespace(), $namespace)) {

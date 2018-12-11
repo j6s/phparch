@@ -76,7 +76,7 @@ class Component extends ValidationCollection
             }
         }
 
-        if ($this->mustOnlyDependOn) {
+        if ($this->mustOnlyDependOn !== null) {
             $namespacesToOnlyDependOn = \array_merge($this->mustOnlyDependOn->getNamespaces(), $this->namespaces);
             foreach ($this->namespaces as $namespace) {
                 $validators[] = new MustOnlyDependOn(
