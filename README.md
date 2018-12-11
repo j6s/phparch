@@ -5,6 +5,7 @@
 - [Simple Namespace validation](#simple-namespace-validation)
     - [Available Validators](#available-validators)
 - [Defining an architecture](#defining-an-architecture)
+- [Examples](#examples)
 
 ## What is this?
 
@@ -100,3 +101,7 @@ methods available:
     ->component('Foo')->mustNotDependOn('Bar')
     ->component('Foo')->mustNotDependOn('Baz')
 ```
+
+## Examples
+
+- [PHPArch tests it's own architecture](./tests/ArchitectureTest.php)
