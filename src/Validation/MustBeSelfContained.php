@@ -42,12 +42,13 @@ class MustBeSelfContained implements Validator
         return $this->namespace->containsAny($to);
     }
 
-    public function getErrorMessage(string $from, string $to): string
+    public function getErrorMessage(string $from, string $to): array
     {
-        return str_replace(
+        $message = str_replace(
             [ ':namespace', ':violatingFrom', ':violatingTo' ],
             [ $this->namespace, $from, $to ],
             $this->message
         );
+        return [ $message ];
     }
 }

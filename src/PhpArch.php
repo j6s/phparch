@@ -49,7 +49,10 @@ class PhpArch
 
             foreach ($astParser->getUsedNamespaces() as $namespace) {
                 if (!$this->validator->isValidBetween($astParser->getDeclaredNamespace(), $namespace)) {
-                    $errors[] = $this->validator->getErrorMessage($astParser->getDeclaredNamespace(), $namespace);
+                    $errors = array_merge(
+                        $errors,
+                        $this->validator->getErrorMessage($astParser->getDeclaredNamespace(), $namespace)
+                    );
                 }
             }
         }

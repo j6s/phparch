@@ -21,8 +21,8 @@ class TestValidator implements Validator
         return $this->result;
     }
 
-    public function getErrorMessage(string $from, string $to): string
+    public function getErrorMessage(string $from, string $to): array
     {
-        return $this->message;
+        return [ $this->message ];
     }
 }

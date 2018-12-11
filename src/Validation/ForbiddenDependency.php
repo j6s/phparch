@@ -31,12 +31,13 @@ class ForbiddenDependency implements Validator
         return !$this->from->contains($from) || !$this->to->contains($to);
     }
 
-    public function getErrorMessage(string $from, string $to): string
+    public function getErrorMessage(string $from, string $to): array
     {
-        return str_replace(
+        $message = str_replace(
             [ ':from', ':to', ':violatingFrom', ':violatingTo' ],
             [ $this->from, $this->to, $from, $to ],
             $this->message
         );
+        return [ $message ];
     }
 }

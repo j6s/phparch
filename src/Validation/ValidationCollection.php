@@ -30,7 +30,9 @@ class ValidationCollection implements Validator
         $valid = true;
         foreach ($this->getValidators() as $validator) {
             if (!$validator->isValidBetween($from, $to)) {
-                $this->addError($from, $to, $validator->getErrorMessage($from, $to));
+                foreach ($validator->getErrorMessage($from, $to) as $error) {
+                    $this->addError($from, $to, $error);
+                }
                 $valid = false;
             }
         }
@@ -38,13 +40,13 @@ class ValidationCollection implements Validator
         return $valid;
     }
 
-    public function getErrorMessage(string $from, string $to): string
+    public function getErrorMessage(string $from, string $to): array
     {
         if (!array_key_exists($from . $to, $this->errors)) {
-            return '';
+            return [];
         }
 
-        return implode(', ', $this->errors[$from . $to]);
+        return $this->errors[$from . $to];
     }
 
     protected function getValidators(): array
