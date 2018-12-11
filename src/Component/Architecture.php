@@ -38,6 +38,46 @@ class Architecture extends ValidationCollection
     }
 
     /**
+     * Declares components based on the given associative array.
+     * The given definitions must be a mapping from the component name to the namespaces
+     * defining that component.
+     *
+     * @example
+     * // This
+     * $architecture->components([
+     *      'Foo' => 'Vendor\\Foo',
+     *      'Bar' => [ 'Vendor\\Bar', 'Vendor\\Deep\\Bar' ]
+     * ]);
+     * // Is the same as this
+     * $architecture->component('Foo')->identifiedByNamespace('Vendor\\Foo')
+     *      ->component('Bar')->identifierByNamespace('Vendor\\Bar')->identifiedByNamespace('Vendor\\Deep\\Bar')
+     *
+     * @param string[]|string[][] $definitions
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function components(array $definitions): self
+    {
+        $currentComponent = $this->currentComponent;
+        $lastComponent = $this->lastComponent;
+
+        foreach ($definitions as $name => $identifiedBy) {
+            if (!is_array($identifiedBy)) {
+                $identifiedBy = [ $identifiedBy ];
+            }
+
+            $this->component($name);
+            foreach ($identifiedBy as $namespace) {
+                $this->identifiedByNamespace($namespace);
+            }
+        }
+
+        $this->currentComponent = $currentComponent;
+        $this->lastComponent = $lastComponent;
+        return $this;
+    }
+
+    /**
      * Defines that the currently selected component is identified by the given namespace.
      * This method can be called multiple times in order to add multiple namespaces to the component.
      *
