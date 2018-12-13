@@ -114,6 +114,29 @@ class Architecture extends ValidationCollection
     }
 
     /**
+
+     * Declares that the currently selected component must not depend on by the component
+     * with the given name ignoring interfaces. The declaration of this rule can be made
+     * before the second component is defined.
+     *
+     * @example
+     * (new Architecture)
+     *      ->component('Logic')->identifiedByNamespace('App\\Logic')
+     *      ->mustNotDirectlyDependOn('IO')->identifiedByNamespace('App\\IO')
+     *
+     * @param string $name
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function mustNotDirectlyDependOn(string $name): self
+    {
+        $component = $this->ensureComponentExists($name);
+        $this->getCurrent()->mustNotDependOn($component, true);
+        $this->setCurrent($component);
+        return $this;
+    }
+
+    /**
      * Same as `mustNotDependOn` but refenrences the previous component.
      * This is helpful for 'speaking' chaining.
      *
