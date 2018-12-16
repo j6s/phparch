@@ -22,7 +22,9 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
             $this->lastClass = $node->namespacedName->toString();
         } elseif ($node instanceof Node\Stmt\ClassMethod && $this->lastClass) {
             $contextFactory = new \phpDocumentor\Reflection\Types\ContextFactory();
-            $context = $contextFactory->createFromReflector(new ReflectionMethod($this->lastClass, (string) $node->name));
+            $context = $contextFactory->createFromReflector(
+                new ReflectionMethod($this->lastClass, (string) $node->name)
+            );
             if ($node->hasAttribute('comments')) {
                 $this->extractDocBlocks((array)$node->getAttribute('comments'), $context);
             }
