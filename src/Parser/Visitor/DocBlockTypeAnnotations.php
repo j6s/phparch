@@ -8,21 +8,24 @@ use phpDocumentor\Reflection\TypeResolver;
 use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node;
-use ReflectionMethod;
 
 class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
 {
-
     /** @var string */
-    private $lastClass;
+    private $lastNamespace;
+
+    /** @var string[] */
+    private $useStatements = [];
 
     public function enterNode(Node $node)
     {
-        if ($node instanceof Node\Stmt\ClassLike && $node->namespacedName !== null) {
-            $this->lastClass = $node->namespacedName->toString();
-        } elseif ($node instanceof Node\Stmt\ClassMethod && $this->lastClass) {
-            $contextFactory = new \phpDocumentor\Reflection\Types\ContextFactory();
-            $context = $contextFactory->createFromReflector(new ReflectionMethod($this->lastClass, (string) $node->name));
+        if ($node instanceof Node\Stmt\Namespace_) {
+            $this->lastNamespace = $node->name ? $node->name->toString() : '';
+            $this->useStatements = [];
+        } elseif ($node instanceof Node\Stmt\UseUse) {
+            $this->useStatements[$this->extractAlias($node)] = $node->name->toString();
+        } elseif ($node instanceof Node\Stmt\ClassMethod) {
+            $context = new Context($this->lastNamespace, $this->useStatements);
             if ($node->hasAttribute('comments')) {
                 $this->extractDocBlocks((array)$node->getAttribute('comments'), $context);
             }
@@ -66,5 +69,15 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
             return $toCheck;
         }
         return null;
+    }
+
+    private function extractAlias(Node\Stmt\UseUse $node): string
+    {
+        if (!method_exists($node, 'getAlias')) {
+            // Compatibility mode: nikic/php-parser@3.x
+            return $node->alias;
+        }
+
+        return $node->getAlias()->toString();
     }
 }

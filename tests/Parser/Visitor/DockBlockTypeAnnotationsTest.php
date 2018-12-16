@@ -3,8 +3,10 @@ namespace J6s\PhpArch\Tests\Parser\Visitor;
 
 
 use J6s\PhpArch\Parser\Visitor\DocBlockTypeAnnotations;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\AnonymousClassDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockReturn;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedAnonymousClassDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockReturn;
 use J6s\PhpArch\Tests\TestCase;
@@ -44,4 +46,13 @@ class DockBlockTypeAnnotationsTest extends TestCase
         $this->assertContains(ImportedDocBlockReturn::class, $this->extracted);
     }
 
+    public function testExtractsArgumentAnnotationsFromAnonymousClass()
+    {
+        $this->assertContains(AnonymousClassDocBlockArgument::class, $this->extracted);
+    }
+
+    public function testExtractsImportedArgumentAnnotationFromAnonymousClass()
+    {
+        $this->assertContains(ImportedAnonymousClassDocBlockArgument::class, $this->extracted);
+    }
 }
