@@ -11,9 +11,7 @@ abstract class AbstractValidationCollection implements Validator
 
     public function __construct(array $validators = [])
     {
-        foreach ($validators as $validator) {
-            $this->addValidator($validator);
-        }
+        $this->validators = $validators;
     }
 
     public function isValidBetween(string $from, string $to): bool

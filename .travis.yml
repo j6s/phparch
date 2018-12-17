@@ -9,3 +9,8 @@ env:
 
 install:
   - '[ $COMPOSER_LOWEST == 1 ] && composer update --prefer-lowest || composer install'
+
+script:
+  - ./vendor/bin/phpcs
+  - ./vendor/bin/phpstan analyze --level 7 src
+  - ./vendor/bin/phpunit

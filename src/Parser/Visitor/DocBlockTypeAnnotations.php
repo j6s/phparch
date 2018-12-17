@@ -75,7 +75,7 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
     {
         if (!method_exists($node, 'getAlias')) {
             // Compatibility mode: nikic/php-parser@3.x
-            return $node->alias;
+            return (string) $node->alias;
         }
 
         return $node->getAlias()->toString();
