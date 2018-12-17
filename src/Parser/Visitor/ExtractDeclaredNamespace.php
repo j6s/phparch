@@ -12,7 +12,7 @@ class ExtractDeclaredNamespace extends NodeVisitorAbstract
 
     public function enterNode(Node $node)
     {
-        if ($node instanceof Node\Stmt\ClassLike && $node->namespacedName !== null) {
+        if ($node instanceof Node\Stmt\ClassLike && isset($node->namespacedName) && $node->namespacedName  !== null) {
             $this->declared = $node->namespacedName->toString();
         }
     }

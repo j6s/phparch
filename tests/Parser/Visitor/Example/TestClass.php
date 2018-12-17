@@ -2,6 +2,7 @@
 namespace J6s\PhpArch\Tests\Parser\Visitor\Example;
 
 use Foo\Bar\Baz;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedAnonymousClassDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\InstanceCreation\ImportedInstanceCreation;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\Traits\ImporetdTrait;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\TypeAnnotation\ImportedArgumentAnnotation;
@@ -54,5 +55,24 @@ class TestClass extends ParentClass implements SomeInterface
     public function importedDocBlock($argument)
     {
 
+    }
+
+    public function anonymousClassFactory()
+    {
+        return new class {
+            /**
+             * @param \J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\AnonymousClassDocBlockArgument $argument
+             */
+            public function docBlock($argument)
+            {
+            }
+
+            /**
+             * @param ImportedAnonymousClassDocBlockArgument $argument
+             */
+            public function importedDocBlock($argument)
+            {
+            }
+        };
     }
 }
