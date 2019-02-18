@@ -8,6 +8,11 @@ env:
   - COMPOSER_LOWEST=0
   - COMPOSER_LOWEST=1
 
+matrix:
+  exclude:
+    - php: '7.3'
+      env: COMPOSER_LOWEST=1
+
 install:
   - '[ $COMPOSER_LOWEST == 1 ] && composer update --prefer-lowest || composer install'
 
