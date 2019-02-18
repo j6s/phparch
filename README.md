@@ -5,7 +5,9 @@
 - [Simple Namespace validation](#simple-namespace-validation)
     - [Available Validators](#available-validators)
 - [Defining an architecture](#defining-an-architecture)
-
+    - [Syntactic sugar: Bulk definition of components](#syntactic-sugar-bulk-definition-of-components)
+    - [Syntactic sugar: Chaining multiple dependency rules](#syntactic-sugar-chaining-multiple-dependency-rules)
+- [Examples](#examples)
 ## What is this?
 
 PHPArch is a work in progress architectural testing library for PHP projects.
@@ -78,6 +80,30 @@ The following methods allow you to add assertions to your component structure:
 - `mustNotBeDependedOnBy`
 - `mustOnlyDependOn`
 
+### Syntactic sugar: Bulk definition of components
+
+While the speaking Api for defining an architecture is great it can get convoluted and
+hard to read if you have a lot of components. The `components` method can be used to define 
+components using a simple associative array where the key is the component name and the
+value is the namespaces that define the component. This way definitions of components and
+setting up dependency rules can be split into 2 steps for better readability.
+
+```php
+// This
+$architecture->components([
+     'Foo' => 'Vendor\\Foo',
+     'Bar' => [ 'Vendor\\Bar', 'Vendor\\Deep\\Bar' ]
+]);
+
+// Is the same as this
+$architecture->component('Foo')
+    ->identifiedByNamespace('Vendor\\Foo')
+    ->component('Bar')
+    ->identifierByNamespace('Vendor\\Bar')
+    ->identifiedByNamespace('Vendor\\Deep\\Bar')
+```
+
+### Syntactic sugar: Chaining multiple dependency rules
 If a non-existing component is referenced in one of these methods then it will be created.
 These methods will also set the referenced component as the currently active one - so when using
 `->mustNotDependOn('FooBar')` all future operations reference the `FooBar` component.
@@ -100,3 +126,7 @@ methods available:
     ->component('Foo')->mustNotDependOn('Bar')
     ->component('Foo')->mustNotDependOn('Baz')
 ```
+
+## Examples
+
+- [PHPArch tests it's own architecture](./tests/ArchitectureTest.php)

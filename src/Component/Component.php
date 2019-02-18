@@ -1,13 +1,19 @@
 <?php
+
 namespace J6s\PhpArch\Component;
 
+use J6s\PhpArch\Validation\AbstractValidationCollection;
+use J6s\PhpArch\Validation\AllowInterfaces;
 use J6s\PhpArch\Validation\ForbiddenDependency;
 use J6s\PhpArch\Validation\MustOnlyDependOn;
 use J6s\PhpArch\Validation\ValidationCollection;
 use J6s\PhpArch\Validation\Validator;
 
-class Component extends ValidationCollection
+class Component extends AbstractValidationCollection
 {
+    private const MUST_NOT_DEPEND_ON = 'mustNotDepend';
+    private const MUST_ONLY_DEPEND_ON = 'mustOnlyDependOn';
+
     /**
      * @var string
      */
@@ -19,17 +25,7 @@ class Component extends ValidationCollection
      */
     private $namespaces = [];
 
-    /**
-     * The components to which the current component may not have any dependencies.
-     * @var Component[]
-     */
-    private $forbiddenDependencies = [];
-
-    /**
-     * The component which are the only allowed dependencies for the current component
-     * @var Component
-     */
-    private $mustOnlyDependOn;
+    private $rules = [];
 
     public function __construct(string $name)
     {
@@ -37,14 +33,22 @@ class Component extends ValidationCollection
         $this->name = $name;
     }
 
-    public function mustNotDependOn(Component $component): void
+    public function mustNotDependOn(Component $component, bool $allowInterfaces = false): void
     {
-        $this->forbiddenDependencies[] = $component;
+        $this->rules[] = [
+            'component' => $component,
+            'type' => self::MUST_NOT_DEPEND_ON,
+            'allowInterfaces' => $allowInterfaces,
+        ];
     }
 
     public function mustOnlyDependOn(Component $component): void
     {
-        $this->mustOnlyDependOn = $component;
+        $this->rules[] = [
+            'component' => $component,
+            'type' => self::MUST_ONLY_DEPEND_ON,
+            'allowInterfaces' => false
+        ];
     }
 
     public function getNamespaces(): array
@@ -64,34 +68,58 @@ class Component extends ValidationCollection
 
     protected function getValidators(): array
     {
-        $validators = [];
-        foreach ($this->forbiddenDependencies as $forbiddenDependency) {
-            $message = $this . ' must not depend on ' . $forbiddenDependency .
-                ' but :violatingFrom depends on :violatingTo';
+        return array_map(
+            function (array $rule) {
+                return $this->ruleToValidator($rule);
+            },
+            $this->rules
+        );
+    }
 
-            foreach ($this->namespaces as $fromNamespace) {
-                foreach ($forbiddenDependency->getNamespaces() as $toNamespace) {
-                    $validators[] = new ForbiddenDependency($fromNamespace, $toNamespace, $message);
-                }
-            }
-        }
+    private function ruleToValidator(array $rule): Validator
+    {
+        $validator = new ValidationCollection();
 
-        if ($this->mustOnlyDependOn !== null) {
-            $namespacesToOnlyDependOn = \array_merge($this->mustOnlyDependOn->getNamespaces(), $this->namespaces);
-            foreach ($this->namespaces as $namespace) {
-                $validators[] = new MustOnlyDependOn(
-                    $namespace,
-                    $namespacesToOnlyDependOn,
-                    $this . ' must only depend on ' . $this->mustOnlyDependOn .
-                    ' but :violatingFrom depends on :violatingTo'
+        foreach ($this->getNamespaces() as $fromNamespace) {
+            foreach ($rule['component']->getNamespaces() as $toNamespace) {
+                $validator->addValidator(
+                    $this->createValidator($rule['type'], $fromNamespace, $toNamespace, $rule['component'])
                 );
             }
         }
 
-        foreach (parent::getValidators() as $validator) {
-            $validators[] = $validator;
+        if ($rule['allowInterfaces']) {
+            $validator = new AllowInterfaces($validator);
         }
 
-        return $validators;
+        return $validator;
+    }
+
+    private function createValidator(
+        string $type,
+        string $fromNamespace,
+        string $toNamespace,
+        Component $component
+    ): Validator {
+        switch ($type) {
+            case self::MUST_NOT_DEPEND_ON:
+                return new ForbiddenDependency(
+                    $fromNamespace,
+                    $toNamespace,
+                    $this . ' must not depend on ' . $component .
+                    ' but :violatingFrom depends on :violatingTo'
+                );
+
+            case self::MUST_ONLY_DEPEND_ON:
+                return new MustOnlyDependOn(
+                    $fromNamespace,
+                    $toNamespace,
+                    $this . ' must only depend on ' . $component .
+                    ' but :violatingFrom depends on :violatingTo'
+                );
+
+            default:
+                throw new \InvalidArgumentException('Cannot build rule of type ' . $type);
+        }
     }
 }

@@ -1,64 +1,12 @@
 <?php
 namespace J6s\PhpArch\Validation;
 
-class ValidationCollection implements Validator
+class ValidationCollection extends AbstractValidationCollection
 {
-
-    /** @var Validator[] */
-    protected $validators = [];
-
-    /** @var string[][] */
-    private $errors = [];
-
-    public function __construct(array $validators = [])
-    {
-        foreach ($validators as $validator) {
-            $this->addValidator($validator);
-        }
-    }
 
     public function addValidator(Validator $validator): self
     {
         $this->validators[] = $validator;
         return $this;
-    }
-
-    public function isValidBetween(string $from, string $to): bool
-    {
-        $this->errors = [];
-
-        $valid = true;
-        foreach ($this->getValidators() as $validator) {
-            if (!$validator->isValidBetween($from, $to)) {
-                foreach ($validator->getErrorMessage($from, $to) as $error) {
-                    $this->addError($from, $to, $error);
-                }
-                $valid = false;
-            }
-        }
-
-        return $valid;
-    }
-
-    public function getErrorMessage(string $from, string $to): array
-    {
-        if (!array_key_exists($from . $to, $this->errors)) {
-            return [];
-        }
-
-        return $this->errors[$from . $to];
-    }
-
-    protected function getValidators(): array
-    {
-        return $this->validators;
-    }
-
-    private function addError(string $from, string $to, string $message)
-    {
-        if (!array_key_exists($from . $to, $this->errors)) {
-            $this->errors[$from . $to] = [];
-        }
-        $this->errors[$from . $to][] = $message;
     }
 }

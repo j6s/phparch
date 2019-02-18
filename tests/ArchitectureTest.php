@@ -12,10 +12,19 @@ class ArchitectureTest extends TestCase
     public function testArchitectureRot(): void
     {
         $architecture = (new Architecture())
-            ->component('Component')->identifiedByNamespace('J6s\\PhpArch\\Component')
-            ->mustNotBeDependedOnBy('Validation')->identifiedByNamespace('J6s\\PhpArch\\Validation')
-            ->component('Parser')->mustOnlyDependOn('Vendor:PHParser')->identifiedByNamespace('PhpParser')
-            ->component('Exceptions')->mustOnlyDependOn('PHP_Core:Exception')->identifiedByNamespace('Exception');
+            ->components([
+                'Component' => 'J6s\\PhpArch\\Component',
+                'Validation' => 'J6s\\PhpArch\\Validation',
+                'Exceptions' => 'J6s\\PhpArch\\Exception',
+                'Parser' => 'J6s\\PhpArch\\Parser',
+                'PHP_Core:Exception' => 'Exception'
+            ]);
+
+        $architecture->component('Validation')->mustNotDependOn('Component');
+        $architecture->component('Exceptions')->mustOnlyDependOn('PHP_Core:Exception');
+        $architecture->component('Parser')
+            ->mustNotDependOn('Component')
+            ->andMustNotDependOn('Validation');
 
         (new PhpArch())
             ->fromDirectory(__DIR__ . '/../src')

@@ -38,6 +38,46 @@ class Architecture extends ValidationCollection
     }
 
     /**
+     * Declares components based on the given associative array.
+     * The given definitions must be a mapping from the component name to the namespaces
+     * defining that component.
+     *
+     * @example
+     * // This
+     * $architecture->components([
+     *      'Foo' => 'Vendor\\Foo',
+     *      'Bar' => [ 'Vendor\\Bar', 'Vendor\\Deep\\Bar' ]
+     * ]);
+     * // Is the same as this
+     * $architecture->component('Foo')->identifiedByNamespace('Vendor\\Foo')
+     *      ->component('Bar')->identifierByNamespace('Vendor\\Bar')->identifiedByNamespace('Vendor\\Deep\\Bar')
+     *
+     * @param string[]|string[][] $definitions
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function components(array $definitions): self
+    {
+        $currentComponent = $this->currentComponent;
+        $lastComponent = $this->lastComponent;
+
+        foreach ($definitions as $name => $identifiedBy) {
+            if (!is_array($identifiedBy)) {
+                $identifiedBy = [ $identifiedBy ];
+            }
+
+            $this->component($name);
+            foreach ($identifiedBy as $namespace) {
+                $this->identifiedByNamespace($namespace);
+            }
+        }
+
+        $this->currentComponent = $currentComponent;
+        $this->lastComponent = $lastComponent;
+        return $this;
+    }
+
+    /**
      * Defines that the currently selected component is identified by the given namespace.
      * This method can be called multiple times in order to add multiple namespaces to the component.
      *
@@ -69,6 +109,29 @@ class Architecture extends ValidationCollection
     {
         $component = $this->ensureComponentExists($name);
         $this->getCurrent()->mustNotDependOn($component);
+        $this->setCurrent($component);
+        return $this;
+    }
+
+    /**
+
+     * Declares that the currently selected component must not depend on by the component
+     * with the given name ignoring interfaces. The declaration of this rule can be made
+     * before the second component is defined.
+     *
+     * @example
+     * (new Architecture)
+     *      ->component('Logic')->identifiedByNamespace('App\\Logic')
+     *      ->mustNotDirectlyDependOn('IO')->identifiedByNamespace('App\\IO')
+     *
+     * @param string $name
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function mustNotDirectlyDependOn(string $name): self
+    {
+        $component = $this->ensureComponentExists($name);
+        $this->getCurrent()->mustNotDependOn($component, true);
         $this->setCurrent($component);
         return $this;
     }
