@@ -55,4 +55,16 @@ class DockBlockTypeAnnotationsTest extends TestCase
     {
         $this->assertContains(ImportedAnonymousClassDocBlockArgument::class, $this->extracted);
     }
+
+    public function testIgnoresScalarTypeHints()
+    {
+        $this->assertNotContains('string', $this->extracted);
+        $this->assertNotContains('int', $this->extracted);
+    }
+
+    public function testIncludesNonExistingClasses()
+    {
+        $this->assertContains('Non\\ExistingClass', $this->extracted);
+        $this->assertContains('Another\\Non\\ExistingClass', $this->extracted);
+    }
 }

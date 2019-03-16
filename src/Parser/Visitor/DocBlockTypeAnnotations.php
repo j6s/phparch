@@ -56,19 +56,9 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
             return null;
         }
 
-        $typeWithoutBackslashes = trim((string)$type, '\\');
-        $resolved = (new TypeResolver())->resolve($typeWithoutBackslashes, $context);
-        return $this->fqnIfClassExists($typeWithoutBackslashes) ?:
-            $this->fqnIfClassExists((string) $resolved);
-    }
-
-    private function fqnIfClassExists(string $type): ?string
-    {
-        $toCheck = trim($type, '\\');
-        if (class_exists($toCheck) || interface_exists($toCheck) || trait_exists($toCheck)) {
-            return $toCheck;
-        }
-        return null;
+        $resolvableType = $this->stripLeadingBackslashIfAliasedType((string) $type, $context);
+        $resolvedType = (string) (new TypeResolver())->resolve($resolvableType, $context);
+        return ltrim($resolvedType, '\\');
     }
 
     private function extractAlias(Node\Stmt\UseUse $node): string
@@ -79,5 +69,22 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
         }
 
         return $node->getAlias()->toString();
+    }
+
+    private function stripLeadingBackslashIfAliasedType(string $namespace, Context $context): string
+    {
+        $withoutBackslash = ltrim($namespace, '\\');
+        [ $firstPart ] = explode('\\', $withoutBackslash);
+        if (array_key_exists($firstPart, $context->getNamespaceAliases())) {
+            return $withoutBackslash;
+        }
+
+        return $namespace;
+    }
+
+    private function isImported(string $namespace, Context $context): bool
+    {
+        [ $firstPart ] = explode($namespace, '\\');
+        return array_key_exists((string) $firstPart, $context->getNamespaceAliases());
     }
 }

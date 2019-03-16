@@ -16,12 +16,13 @@ class FullyQualifiedReference extends NamespaceCollectingVisitor
 
     public function enterNode(Node $node)
     {
-        if ($node instanceof Node\Name\FullyQualified) {
-            $string = (string) $node;
-            $exists = class_exists($string) || interface_exists($string) || trait_exists($string);
-            if ($exists) {
-                $this->namespaces[] = (string) $node;
-            }
+        if ($node instanceof Node\Name\FullyQualified && !$this->isCallToSimpleFunction($node)) {
+            $this->namespaces[] = (string) $node;
         }
+    }
+
+    private function isCallToSimpleFunction(Node\Name\FullyQualified $node): bool
+    {
+        return function_exists((string) $node);
     }
 }

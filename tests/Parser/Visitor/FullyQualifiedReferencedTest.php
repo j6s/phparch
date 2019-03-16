@@ -89,4 +89,20 @@ class FullyQualifiedReferencedTest extends TestCase
         $this->assertContains(Example\TypeAnnotation\ImportedReturnTypeAnnotation::class, $this->extracted);
     }
 
+    public function testIgnoresScalarTypeHints()
+    {
+        $this->assertNotContains('string', $this->extracted);
+        $this->assertNotContains('int', $this->extracted);
+    }
+
+    public function testIgnoresSimpleFunctionCalls()
+    {
+        $this->assertNotContains('count', $this->extracted);
+    }
+
+    public function testIncludesNonExistingClasses()
+    {
+        $this->assertContains('Foo\Bar\This\Does\Not\Exist', $this->extracted);
+    }
+
 }
