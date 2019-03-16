@@ -18,6 +18,6 @@ class MustOnlyHaveAutoloadableDependencies implements Validator
 
     public function getErrorMessage(string $from, string $to): array
     {
-        return str_replace([':from', ':to'], [$from, $to], $this->message);
+        return [ str_replace([':from', ':to'], [$from, $to], $this->message) ];
     }
 }
