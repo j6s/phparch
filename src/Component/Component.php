@@ -6,6 +6,7 @@ use J6s\PhpArch\Validation\AbstractValidationCollection;
 use J6s\PhpArch\Validation\AllowInterfaces;
 use J6s\PhpArch\Validation\ForbiddenDependency;
 use J6s\PhpArch\Validation\MustOnlyDependOn;
+use J6s\PhpArch\Validation\MustOnlyHaveAutoloadableDependencies;
 use J6s\PhpArch\Validation\ValidationCollection;
 use J6s\PhpArch\Validation\Validator;
 
@@ -68,12 +69,14 @@ class Component extends AbstractValidationCollection
 
     protected function getValidators(): array
     {
-        return array_map(
+        $validators = array_map(
             function (array $rule) {
                 return $this->ruleToValidator($rule);
             },
             $this->rules
         );
+        $validators[] = new MustOnlyHaveAutoloadableDependencies();
+        return $validators;
     }
 
     private function ruleToValidator(array $rule): Validator

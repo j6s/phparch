@@ -3,50 +3,50 @@ namespace J6s\PhpArch\Tests\Component;
 
 
 use J6s\PhpArch\Component\Component;
+use J6s\PhpArch\Tests\Component\Example\Allowed\AllowedDependency;
+use J6s\PhpArch\Tests\Component\Example\Forbidden\ForbiddenDependency;
+use J6s\PhpArch\Tests\Component\Example\OutsideDependency;
+use J6s\PhpArch\Tests\Component\Example\Test\InsideDependency;
+use J6s\PhpArch\Tests\Component\Example\Test\TestClass;
 use J6s\PhpArch\Tests\TestCase;
 
 class ComponentTest extends TestCase
 {
+    const TEST_NAMESPACE = 'J6s\PhpArch\Tests\Component\Example\Test';
+    const FORBIDDEN_NAMESPACE = 'J6s\PhpArch\Tests\Component\Example\Forbidden';
+    const ALLOWED_NAMESPACE = 'J6s\PhpArch\Tests\Component\Example\Allowed';
 
     public function testComponentsCanHaveForbiddenDependencies(): void
     {
         // Component foo (Foo\..., Deep\Foo\...) must not depend on bar (Bar\..., Deep\Bar\...)
-        $foo = new Component('foo');
-        $bar = new Component('bar');
+        $test = new Component('test');
+        $forbidden = new Component('forbidden');
 
-        $foo->addNamespace('Foo');
-        $foo->addNamespace('Deep\\Foo');
-        $bar->addNamespace('Bar');
-        $bar->addNamespace('Deep\\Bar');
+        $test->addNamespace(static::TEST_NAMESPACE);
+        $forbidden->addNamespace(static::FORBIDDEN_NAMESPACE);
 
-        $foo->mustNotDependOn($bar);
+        $test->mustNotDependOn($forbidden);
 
-        $this->assertTrue($foo->isValidBetween('Foo\\Component', 'Deep\\Foo\\Another'));
-        $this->assertTrue($foo->isValidBetween('Foo\\Component', 'Some\\Other\\Library'));
-        $this->assertTrue($foo->isValidBetween('Deep\\Foo\\Component', 'Foo\\Another'));
-        $this->assertTrue($foo->isValidBetween('Deep\\Foo\\Component', 'Some\\Other\\Library'));
-
-        $this->assertFalse($foo->isValidBetween('Foo\\Component', 'Bar\\Component'));
-        $this->assertFalse($foo->isValidBetween('Foo\\Component', 'Deep\\Bar\\Component'));
-        $this->assertFalse($foo->isValidBetween('Deep\\Foo\\Component', 'Bar\\Component'));
-        $this->assertFalse($foo->isValidBetween('Deep\\Foo\\Component', 'Deep\\Bar\\Component'));
-
-        $this->assertTrue($foo->isValidBetween('Bar\\Component', 'Foo\\Component'));
+        $this->assertTrue($test->isValidBetween(TestClass::class, AllowedDependency::class));
+        $this->assertFalse($test->isValidBetween(TestClass::class, ForbiddenDependency::class));
+        $this->assertTrue($test->isValidBetween(TestClass::class, InsideDependency::class));
+        $this->assertTrue($test->isValidBetween(TestClass::class, OutsideDependency::class));
     }
 
-    public function testComponentCanBeDefinedToOnlyDefineOnAnotherComponent(): void
+    public function testComponentCanBeDefinedToOnlyDependOnAnotherComponent(): void
     {
-        $http = new Component('AppHttp');
-        $library = new Component('SymfonyHttp');
+        $test = new Component('test');
+        $allowed = new Component('allowed');
 
-        $http->addNamespace('App\\Http');
-        $library->addNamespace('Symfony\\Http');
+        $test->addNamespace(static::TEST_NAMESPACE);
+        $allowed->addNamespace(static::ALLOWED_NAMESPACE);
 
-        $http->mustOnlyDependOn($library);
+        $test->mustOnlyDependOn($allowed);
 
-        $this->assertTrue($http->isValidBetween('App\\Http\\AddArticleRequest', 'App\\Http\\Request'));
-        $this->assertTrue($http->isValidBetween('App\\Http\\Request', 'Symfony\\Http\\Request'));
-        $this->assertFalse($http->isValidBetween('App\\Http\\AddArticleRequest', 'App\\Controllers\\ArticleController'));
+        $this->assertTrue($test->isValidBetween(TestClass::class, AllowedDependency::class));
+        $this->assertFalse($test->isValidBetween(TestClass::class, ForbiddenDependency::class));
+        $this->assertTrue($test->isValidBetween(TestClass::class, InsideDependency::class));
+        $this->assertFalse($test->isValidBetween(TestClass::class, OutsideDependency::class));
     }
 
 }

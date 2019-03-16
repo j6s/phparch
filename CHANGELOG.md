@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 ### Added
 - A new `MustOnlyHaveAutoloadableDependencies` has been added in order to prevent accidental dependencies
-  to unrelated packages that just happen to be used in the same system often.
+  to unrelated packages that just happen to be used in the same system often. All components in architectures
+  are now being checked against this new validator.
 
 ## [1.0.0] - 2019-02-18
 ### Added
