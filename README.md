@@ -50,6 +50,10 @@ Currently the following validators are available:
 - `MustBeSelfContained` Lets you declare that a namespace must be self-contained meaning that it may not have
   any external dependencies.
 - `MustOnlyDependOn` Lets you declare that one namespace must only depend on another namespace.
+- `MustOnlyHaveAutoloadableDependencies` checks if all dependencies are autoloadable in the current environment.
+  This can be helpful if two packages should not have any dependencies on each other but they still sneak in because
+  the packages are often used together.
+- `AllowInterfaces` is a wrapper for validators that allows dependencies if they are to interfaces.
 
 Most architectural boundaries can be described with these rules.
 

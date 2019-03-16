@@ -11,7 +11,7 @@ use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockReturn;
 use J6s\PhpArch\Tests\TestCase;
 
-class DockBlockTypeAnnotationsTest extends TestCase
+class DocBlockTypeAnnotationsTest extends TestCase
 {
 
     /** @var string[] */
