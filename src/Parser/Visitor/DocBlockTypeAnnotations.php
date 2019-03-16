@@ -56,9 +56,14 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
             return null;
         }
 
-        $resolvableType = $this->stripLeadingBackslashIfAliasedType((string) $type, $context);
-        $resolvedType = (string) (new TypeResolver())->resolve($resolvableType, $context);
-        return ltrim($resolvedType, '\\');
+        // Try to resolve relative to current namespace first
+        $resolvedType = (string) (new TypeResolver())->resolve(ltrim($type, '\\'), $context);
+        if (class_exists($resolvedType) || interface_exists($resolvedType) || trait_exists($resolvedType)) {
+            return ltrim($resolvedType, '\\');
+        }
+
+        // Assume absolute reference else
+        return ltrim($type, '\\');
     }
 
     private function extractAlias(Node\Stmt\UseUse $node): string

@@ -6,6 +6,7 @@ use J6s\PhpArch\Tests\Parser\Visitor\Example\InstanceCreation\ImportedInstanceCr
 use J6s\PhpArch\Tests\Parser\Visitor\Example\ParentClass;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\SomeInterface;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\StaticMethodCall\ImportedStaticMethodCall;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\TestClass;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\Traits\ImporetdTrait;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\Traits\UsedTrait;
 use J6s\PhpArch\Tests\TestCase;
@@ -103,6 +104,11 @@ class FullyQualifiedReferencedTest extends TestCase
     public function testIncludesNonExistingClasses()
     {
         $this->assertContains('Foo\Bar\This\Does\Not\Exist', $this->extracted);
+    }
+
+    public function testParsesReferencesToItselfCorrectly()
+    {
+        $this->assertContains(TestClass::class, $this->extracted);
     }
 
 }

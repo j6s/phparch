@@ -53,6 +53,19 @@ class TestClass extends ParentClass implements SomeInterface
 
     }
 
+    public function referenceToItselfInAnnotation(TestClass $argument)
+    {
+
+    }
+
+    /**
+     * @param TestClass $test
+     */
+    public function referenceToItselfInDocBlock()
+    {
+
+    }
+
     /**
      * @param string $foo
      * @return int

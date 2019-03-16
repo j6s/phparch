@@ -9,6 +9,7 @@ use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockReturn;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedAnonymousClassDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockReturn;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\TestClass;
 use J6s\PhpArch\Tests\TestCase;
 
 class DocBlockTypeAnnotationsTest extends TestCase
@@ -67,4 +68,10 @@ class DocBlockTypeAnnotationsTest extends TestCase
         $this->assertContains('Non\\ExistingClass', $this->extracted);
         $this->assertContains('Another\\Non\\ExistingClass', $this->extracted);
     }
+
+    public function testParsesReferencesToItselfCorrectly()
+    {
+        $this->assertContains(TestClass::class, $this->extracted);
+    }
+
 }
