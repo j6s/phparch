@@ -4,6 +4,7 @@ namespace J6s\PhpArch\Tests;
 
 use J6s\PhpArch\Component\Architecture;
 use J6s\PhpArch\PhpArch;
+use J6s\PhpArch\Validation\ExplicitlyAllowDependency;
 use J6s\PhpArch\Validation\MustBeSelfContained;
 
 class ArchitectureTest extends TestCase
@@ -26,9 +27,15 @@ class ArchitectureTest extends TestCase
             ->mustNotDependOn('Component')
             ->andMustNotDependOn('Validation');
 
+        $utility = new ExplicitlyAllowDependency(
+            new MustBeSelfContained('J6s\\PhpArch\\Utility'),
+            'J6s\\PhpArch\\Utility',
+            'Safe\\'
+        );
+
         (new PhpArch())
             ->fromDirectory(__DIR__ . '/../src')
-            ->validate(new MustBeSelfContained('J6s\\PhpArch\\Utility'))
+            ->validate($utility)
             ->validate($architecture)
             ->assertHasNoErrors();
     }

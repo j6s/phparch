@@ -13,7 +13,6 @@ use J6s\PhpArch\Validation\MustOnlyHaveAutoloadableDependencies;
 use J6s\PhpArch\Validation\MustOnlyDependOnComposerDependencies;
 use J6s\PhpArch\Validation\ValidationCollection;
 use J6s\PhpArch\Validation\Validator;
-use Neos\Flow\Validation\Validator\CollectionValidator;
 
 class Component extends AbstractValidationCollection
 {
