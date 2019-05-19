@@ -1,7 +1,6 @@
 <?php
 namespace J6s\PhpArch\Utility;
 
-
 class ArrayUtility
 {
 
@@ -47,5 +46,4 @@ class ArrayUtility
             }
         }
     }
-
 }

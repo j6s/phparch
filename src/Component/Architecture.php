@@ -340,7 +340,7 @@ class Architecture extends ValidationCollection
      */
     public function disallowInterdependence(array $components, array $allowed = []): self
     {
-        ArrayUtility::forEachCombinationInArray($components, function(string $source, string $target) use ($allowed): void {
+        ArrayUtility::forEachCombinationInArray($components, function (string $source, string $target) use ($allowed): void {
             if (\in_array($target, $allowed[$source] ?? [], true)) {
                 return;
             }

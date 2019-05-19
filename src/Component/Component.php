@@ -179,5 +179,4 @@ class Component extends AbstractValidationCollection
         }
         return $validators;
     }
-
 }
