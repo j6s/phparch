@@ -168,18 +168,18 @@ class ComposerFileParser
     private function extractNamespaces(array $package, bool $includeDev): array
     {
         $namespaces = [];
-        foreach (array_keys($this->composerFile['autoload']['psr-0'] ?? []) as $namespace) {
+        foreach (array_keys($package['autoload']['psr-0'] ?? []) as $namespace) {
             $namespaces[] = (string) $namespace;
         }
-        foreach (array_keys($this->composerFile['autoload']['psr-4'] ?? []) as $namespace) {
+        foreach (array_keys($package['autoload']['psr-4'] ?? []) as $namespace) {
             $namespaces[] = (string) $namespace;
         }
 
         if ($includeDev) {
-            foreach (array_keys($this->composerFile['autoload-dev']['psr-0'] ?? []) as $namespace) {
+            foreach (array_keys($package['autoload-dev']['psr-0'] ?? []) as $namespace) {
                 $namespaces[] = (string) $namespace;
             }
-            foreach (array_keys($this->composerFile['autoload-dev']['psr-4'] ?? []) as $namespace) {
+            foreach (array_keys($package['autoload-dev']['psr-4'] ?? []) as $namespace) {
                 $namespaces[] = (string) $namespace;
             }
         }
