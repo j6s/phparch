@@ -2,6 +2,7 @@
 namespace J6s\PhpArch\Component;
 
 use J6s\PhpArch\Exception\ComponentNotDefinedException;
+use J6s\PhpArch\Utility\ComposerFileParser;
 use J6s\PhpArch\Validation\ValidationCollection;
 
 class Architecture extends ValidationCollection
@@ -216,6 +217,70 @@ class Architecture extends ValidationCollection
         $this->setCurrent($component);
         return $this;
     }
+
+
+    /**
+     * Ensures that the current component only depends on namespaces that are declared
+     * in the given composer & lock files.
+     *
+     * If no lock file is passed then the name is automatically generated based on the
+     * composer file name.
+     *
+     * @example
+     * $monorepo = (new Architecture)->components([
+     *      'PackageOne' => 'Vendor\\Library\\PackageOne',
+     *      'PackageTwo' => 'Vendor\\Library\\PackageTwo',
+     * ]);
+     *
+     * $monorepo->component('PackageOne')->mustOnlyDependOnComposerDependencies('Packages/PackageOne/composer.json');
+     * $monorepo->component('PackageTwo')->mustOnlyDependOnComposerDependencies('Packages/PackageTwo/composer.json');
+     *
+     * @param string $composerFile
+     * @param string|null $lockFile
+     * @param bool $includeDev
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function mustOnlyDependOnComposerDependencies(string $composerFile, ?string $lockFile = null, bool $includeDev = false): self
+    {
+        $this->getCurrent()->mustOnlyDependOnComposerDependencies(new ComposerFileParser($composerFile, $lockFile), $includeDev);
+        return $this;
+    }
+
+    /**
+     * Adds a new composer based component.
+     * In an composer based component the namespaces and dependencies are automatically read from
+     * the composer.json file supplied.
+     *
+     * @example
+     * $monorepo = (new Architecture)
+     *      ->addComposerBasedComponent('Packages/PackageOne/composer.json')
+     *      ->addComposerBasedComponent('Packages/PackageTwo/composer.json');
+     *
+     * @param string $composerFile
+     * @param string|null $lockFile
+     * @param string|null $componentName
+     * @param bool $includeDev
+     * @return $this
+     * @throws ComponentNotDefinedException
+     */
+    public function addComposerBasedComponent(
+        string $composerFile,
+        ?string $lockFile = null,
+        string $componentName = null,
+        bool $includeDev = false
+    ): self {
+        $parser = new ComposerFileParser($composerFile, $lockFile);
+        $this->component($componentName ?? $parser->getName());
+
+        foreach ($parser->getNamespaces() as $namespace) {
+            $this->getCurrent()->addNamespace($namespace);
+        }
+
+        $this->getCurrent()->mustOnlyDependOnComposerDependencies($parser, $includeDev);
+        return $this;
+    }
+
 
 
     private function getCurrent(): Component
