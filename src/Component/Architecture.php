@@ -242,9 +242,15 @@ class Architecture extends ValidationCollection
      * @return Architecture
      * @throws ComponentNotDefinedException
      */
-    public function mustOnlyDependOnComposerDependencies(string $composerFile, ?string $lockFile = null, bool $includeDev = false): self
-    {
-        $this->getCurrent()->mustOnlyDependOnComposerDependencies(new ComposerFileParser($composerFile, $lockFile), $includeDev);
+    public function mustOnlyDependOnComposerDependencies(
+        string $composerFile,
+        ?string $lockFile = null,
+        bool $includeDev = false
+    ): self {
+        $this->getCurrent()->mustOnlyDependOnComposerDependencies(
+            new ComposerFileParser($composerFile, $lockFile),
+            $includeDev
+        );
         return $this;
     }
 
@@ -340,7 +346,7 @@ class Architecture extends ValidationCollection
      */
     public function disallowInterdependence(array $components, array $allowed = []): self
     {
-        ArrayUtility::forEachCombinationInArray($components, function (string $source, string $target) use ($allowed): void {
+        ArrayUtility::forEachCombinationInArray($components, function (string $source, string $target) use ($allowed) {
             if (\in_array($target, $allowed[$source] ?? [], true)) {
                 return;
             }

@@ -170,8 +170,10 @@ class Component extends AbstractValidationCollection
         return $validators;
     }
 
-    private function mustOnlyDependOnComposerDependenciesValidator(ComposerFileParser $parser, bool $includeDev): Validator
-    {
+    private function mustOnlyDependOnComposerDependenciesValidator(
+        ComposerFileParser $parser,
+        bool $includeDev
+    ): Validator {
         $validators = new ValidationCollection();
         foreach ($this->namespaces as $fromNamespace) {
             $validators->addValidator(new MustOnlyDependOnComposerDependencies($fromNamespace, $parser, $includeDev));

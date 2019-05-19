@@ -20,7 +20,8 @@ class MustOnlyDependOnComposerDependencies extends MustOnlyDependOn
         string $from,
         ComposerFileParser $parser,
         bool $includeDev = false,
-        string $message = ':from must only depend on dependencies in :composerFile (:lockFile) but :violatingFrom depends on :violatingTo'
+        string $message = ':from must only depend on dependencies in :composerFile (:lockFile)' .
+        ' but :violatingFrom depends on :violatingTo'
     ) {
         $this->parser = $parser;
         parent::__construct($from, $parser->getDeepRequirementNamespaces($includeDev), $message);
