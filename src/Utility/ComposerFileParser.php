@@ -158,6 +158,10 @@ class ComposerFileParser
             $lockedPackages[$package['name']] = $package;
         }
 
+        foreach ($this->lockFile['packages-dev'] ?? [] as $package) {
+            $lockedPackages[$package['name']] = $package;
+        }
+
         return $lockedPackages;
     }
 
