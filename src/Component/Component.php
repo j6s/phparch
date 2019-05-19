@@ -6,6 +6,7 @@ use J6s\PhpArch\Utility\ArrayUtility;
 use J6s\PhpArch\Utility\ComposerFileParser;
 use J6s\PhpArch\Validation\AbstractValidationCollection;
 use J6s\PhpArch\Validation\AllowInterfaces;
+use J6s\PhpArch\Validation\ExplicitlyAllowDependency;
 use J6s\PhpArch\Validation\ForbiddenDependency;
 use J6s\PhpArch\Validation\MustOnlyDependOn;
 use J6s\PhpArch\Validation\MustOnlyHaveAutoloadableDependencies;
@@ -32,6 +33,9 @@ class Component extends AbstractValidationCollection
     private $namespaces = [];
 
     private $rules = [];
+
+    /** @var Component[] */
+    private $explicitlyAllowed = [];
 
     public function __construct(string $name)
     {
@@ -66,6 +70,11 @@ class Component extends AbstractValidationCollection
         ];
     }
 
+    public function explicitlyAllowDependency(Component $component)
+    {
+        $this->explicitlyAllowed[] = $component;
+    }
+
     public function getNamespaces(): array
     {
         return $this->namespaces;
@@ -86,6 +95,16 @@ class Component extends AbstractValidationCollection
         $collection = new ValidationCollection();
         foreach ($this->rules as $rule) {
             $collection->addValidator($this->ruleToValidator($rule));
+        }
+
+        foreach ($this->explicitlyAllowed as $component) {
+            foreach ($this->namespaces as $fromNamespace) {
+                $collection = new ExplicitlyAllowDependency(
+                    $collection,
+                    $fromNamespace,
+                    $component->getNamespaces()
+                );
+            }
         }
 
         return [ $collection, new MustOnlyHaveAutoloadableDependencies() ];

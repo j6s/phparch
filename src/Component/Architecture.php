@@ -282,6 +282,29 @@ class Architecture extends ValidationCollection
     }
 
 
+    /**
+     * Allows adding exceptions to previously declared rules.
+     *
+     * @example
+     * $architecture = new Architecture([
+     *      'PackageOne' => 'Vendor\\Namespace\\PackageOne',
+     *      'PackageTwo' => 'Vendor\\Namespace\\PackageTwo',
+     *      'PackageThree' => 'Vendor\\Namespace\\PackageThree'
+     * ]);
+     *
+     * $architecture->disallowInterdependence([ 'PackageOne', 'PackageTwo', 'PackageThree' ]);
+     * $architecture->component('PackageThree')->isAllowedToDependOn('PackageOne');
+     *
+     *
+     * @param string $component
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function isAllowedToDependOn(string $component): self
+    {
+        $this->getCurrent()->explicitlyAllowDependency($this->ensureComponentExists($component));
+        return $this;
+    }
 
     private function getCurrent(): Component
     {
