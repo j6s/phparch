@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2019-05-19
+### Fixed
+- Architectures are now not validated to only have autoloadable dependencies anymore because
+  this validator disregards namespace imports.
+
 ## [1.1.0] - 2019-05-19
 ### Added
 - A new `MustOnlyHaveAutoloadableDependencies` validator has been added in order to prevent accidental dependencies
