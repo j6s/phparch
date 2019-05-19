@@ -4,6 +4,7 @@ namespace J6s\PhpArch\Component;
 use J6s\PhpArch\Exception\ComponentNotDefinedException;
 use J6s\PhpArch\Utility\ComposerFileParser;
 use J6s\PhpArch\Validation\ValidationCollection;
+use J6s\PhpArch\Utility\ArrayUtility;
 
 class Architecture extends ValidationCollection
 {
@@ -305,6 +306,79 @@ class Architecture extends ValidationCollection
         $this->getCurrent()->explicitlyAllowDependency($this->ensureComponentExists($component));
         return $this;
     }
+
+
+    /**
+     * Method to declare interdependence:
+     * All components in the first array must not depend on any other components in that array.
+     *
+     * The second key-value array can be used to explicitly allow some dependencies among them.
+     *
+     * Note: The second key-value array only allows dependencies in this specific context.
+     *       If you want to declare a more broadly applicable allowance then the
+     *       {@see Architecture::isAllowedToDependOn} is worth looking at.
+     * Note: This method assumes that all components have been declared before
+     *      (e.g. using the {@see Architecture::components} method).
+     *
+     * @example
+     * $architecture->components([
+     *      'Foo' => 'App\\Foo',
+     *      'Bar' => 'App\\Bar',
+     *      'Baz' => 'App\\Baz',
+     * ]);
+     *
+     * // No dependencies between all 3 components allowed - except for Foo => Baz.
+     * $architecture->disallowInterdependence(
+     *      [ 'Foo', 'Bar', 'Baz' ],
+     *      [ 'Foo' => [ 'Baz' ] ]
+     * );
+     *
+     * @param string[] $components
+     * @param array<string, string>[] $allowed
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function disallowInterdependence(array $components, array $allowed = []): self
+    {
+        ArrayUtility::forEachCombinationInArray($components, function(string $source, string $target) use ($allowed): void {
+            if (\in_array($target, $allowed[$source] ?? [], true)) {
+                return;
+            }
+            $this->component($source)->mustNotDependOn($target);
+        });
+
+        return $this;
+    }
+
+    /**
+     * Declares that the current component must not depend on any other previously defined components.
+     *
+     * Note: This method assumes that all components have been declared before
+     *      (e.g. using the {@see Architecture::components} method).
+     *
+     * @example
+     * $architecture->components([
+     *      'Core' => 'App\\Core',
+     *      'Utilities' => 'App\\Utility',
+     *      'Events' => 'App\\Event',
+     * ]);
+     *
+     * $architecture->component('Core')->mustNotDependOnAnyOtherComponent();
+     *
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function mustNotDependOnAnyOtherComponent(): self
+    {
+        $current = $this->getCurrent();
+        foreach ($this->components as $component) {
+            if ($current !== $component) {
+                $current->mustNotDependOn($component);
+            }
+        }
+        return $this;
+    }
+
 
     private function getCurrent(): Component
     {

@@ -23,16 +23,6 @@ class ComposerFileParser
     /** @var array */
     private $lockedPackages;
 
-    public function getComposerFilePath(): string
-    {
-        return $this->composerFilePath;
-    }
-
-    public function getLockFilePath(): string
-    {
-        return $this->lockFilePath;
-    }
-
     public function __construct(string $composerFile, string $lockFile = null)
     {
         if ($lockFile === null) {
@@ -46,6 +36,12 @@ class ComposerFileParser
         $this->lockedPackages = $this->getPackagesFromLockFile();
     }
 
+    /**
+     * Returns an array of all namespaces declared by the current composer file.
+     *
+     * @param bool $includeDev
+     * @return string[]
+     */
     public function getNamespaces(bool $includeDev = false): array
     {
         $namespaces = array_merge(
@@ -64,6 +60,12 @@ class ComposerFileParser
         return $namespaces;
     }
 
+    /**
+     * Returns an array of all required namespaces including deep dependencies (dependencies of dependencies)
+     *
+     * @param bool $includeDev
+     * @return string[]
+     */
     public function getDeepRequirementNamespaces(bool $includeDev): array
     {
         $required = $this->getDirectDependencies($includeDev);
@@ -71,6 +73,12 @@ class ComposerFileParser
         return $this->autoloadableNamespacesForRequirements($required, $includeDev);
     }
 
+    /**
+     * Returns an array of directly required package names.
+     *
+     * @param bool $includeDev
+     * @return string[]
+     */
     public function getDirectDependencies(bool $includeDev): array
     {
         $required = array_keys($this->composerFile['require'] ?? []);
@@ -82,6 +90,13 @@ class ComposerFileParser
         return $required;
     }
 
+    /**
+     * Resolves an array of package names to an array of namespaces declared by those packages.
+     *
+     * @param string[] $requirements
+     * @param bool $includeDev
+     * @return string[]
+     */
     public function autoloadableNamespacesForRequirements(array $requirements, bool $includeDev)
     {
         $namespaces = [];
@@ -103,6 +118,21 @@ class ComposerFileParser
         }
 
         return $namespaces;
+    }
+
+    public function getComposerFilePath(): string
+    {
+        return $this->composerFilePath;
+    }
+
+    public function getLockFilePath(): string
+    {
+        return $this->lockFilePath;
+    }
+
+    public function getName(): string
+    {
+        return $this->composerFile['name'];
     }
 
     private function flattenDependencies(array $topLevelRequirements, bool $includeDev): array
@@ -140,6 +170,7 @@ class ComposerFileParser
     private function getPackagesFromLockFile(): array
     {
         $lockedPackages = [];
+
         foreach ($this->lockFile['packages'] ?? [] as $package) {
             $lockedPackages[$package['name']] = $package;
         }
