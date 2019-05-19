@@ -28,6 +28,16 @@ class TestClass extends ParentClass implements SomeInterface
         ImportedStaticMethodCall::method();
     }
 
+    public function simpleFunctionCall()
+    {
+        \count([]);
+    }
+
+    public function referenceToNonExistingClasses()
+    {
+        new \Foo\Bar\This\Does\Not\Exist();
+    }
+
     public function typeAnnotated(TypeAnnotation\ArgumentAnnotation $argument): TypeAnnotation\ReturnTypeAnnotation
     {
 
@@ -38,11 +48,47 @@ class TestClass extends ParentClass implements SomeInterface
 
     }
 
+    public function scalarTypeAnnotation(string $foo): int
+    {
+
+    }
+
+    public function referenceToItselfInAnnotation(TestClass $argument)
+    {
+
+    }
+
+    /**
+     * @param TestClass $test
+     */
+    public function referenceToItselfInDocBlock()
+    {
+
+    }
+
+    /**
+     * @param string $foo
+     * @return int
+     */
+    public function scalarTypeAnnotationInDocBlock($foo)
+    {
+
+    }
+
     /**
      * @param \J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockArgument $argument
      * @return \J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockReturn
      */
     public function docBlock($argument)
+    {
+
+    }
+
+    /**
+     * @param \Non\ExistingClass $foo
+     * @return \Another\Non\ExistingClass
+     */
+    public function referenceToNonExistingClassInDocBlock($foo)
     {
 
     }

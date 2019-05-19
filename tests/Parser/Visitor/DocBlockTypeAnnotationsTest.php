@@ -9,9 +9,10 @@ use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockReturn;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedAnonymousClassDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockReturn;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\TestClass;
 use J6s\PhpArch\Tests\TestCase;
 
-class DockBlockTypeAnnotationsTest extends TestCase
+class DocBlockTypeAnnotationsTest extends TestCase
 {
 
     /** @var string[] */
@@ -55,4 +56,22 @@ class DockBlockTypeAnnotationsTest extends TestCase
     {
         $this->assertContains(ImportedAnonymousClassDocBlockArgument::class, $this->extracted);
     }
+
+    public function testIgnoresScalarTypeHints()
+    {
+        $this->assertNotContains('string', $this->extracted);
+        $this->assertNotContains('int', $this->extracted);
+    }
+
+    public function testIncludesNonExistingClasses()
+    {
+        $this->assertContains('Non\\ExistingClass', $this->extracted);
+        $this->assertContains('Another\\Non\\ExistingClass', $this->extracted);
+    }
+
+    public function testParsesReferencesToItselfCorrectly()
+    {
+        $this->assertContains(TestClass::class, $this->extracted);
+    }
+
 }

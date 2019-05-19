@@ -2,7 +2,9 @@
 namespace J6s\PhpArch\Component;
 
 use J6s\PhpArch\Exception\ComponentNotDefinedException;
+use J6s\PhpArch\Utility\ComposerFileParser;
 use J6s\PhpArch\Validation\ValidationCollection;
+use J6s\PhpArch\Utility\ArrayUtility;
 
 class Architecture extends ValidationCollection
 {
@@ -214,6 +216,172 @@ class Architecture extends ValidationCollection
         $component = $this->ensureComponentExists($name);
         $this->getCurrent()->mustOnlyDependOn($component);
         $this->setCurrent($component);
+        return $this;
+    }
+
+
+    /**
+     * Ensures that the current component only depends on namespaces that are declared
+     * in the given composer & lock files.
+     *
+     * If no lock file is passed then the name is automatically generated based on the
+     * composer file name.
+     *
+     * @example
+     * $monorepo = (new Architecture)->components([
+     *      'PackageOne' => 'Vendor\\Library\\PackageOne',
+     *      'PackageTwo' => 'Vendor\\Library\\PackageTwo',
+     * ]);
+     *
+     * $monorepo->component('PackageOne')->mustOnlyDependOnComposerDependencies('Packages/PackageOne/composer.json');
+     * $monorepo->component('PackageTwo')->mustOnlyDependOnComposerDependencies('Packages/PackageTwo/composer.json');
+     *
+     * @param string $composerFile
+     * @param string|null $lockFile
+     * @param bool $includeDev
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function mustOnlyDependOnComposerDependencies(
+        string $composerFile,
+        ?string $lockFile = null,
+        bool $includeDev = false
+    ): self {
+        $this->getCurrent()->mustOnlyDependOnComposerDependencies(
+            new ComposerFileParser($composerFile, $lockFile),
+            $includeDev
+        );
+        return $this;
+    }
+
+    /**
+     * Adds a new composer based component.
+     * In an composer based component the namespaces and dependencies are automatically read from
+     * the composer.json file supplied.
+     *
+     * @example
+     * $monorepo = (new Architecture)
+     *      ->addComposerBasedComponent('Packages/PackageOne/composer.json')
+     *      ->addComposerBasedComponent('Packages/PackageTwo/composer.json');
+     *
+     * @param string $composerFile
+     * @param string|null $lockFile
+     * @param string|null $componentName
+     * @param bool $includeDev
+     * @return $this
+     * @throws ComponentNotDefinedException
+     */
+    public function addComposerBasedComponent(
+        string $composerFile,
+        ?string $lockFile = null,
+        string $componentName = null,
+        bool $includeDev = false
+    ): self {
+        $parser = new ComposerFileParser($composerFile, $lockFile);
+        $this->component($componentName ?? $parser->getName());
+
+        foreach ($parser->getNamespaces() as $namespace) {
+            $this->getCurrent()->addNamespace($namespace);
+        }
+
+        $this->getCurrent()->mustOnlyDependOnComposerDependencies($parser, $includeDev);
+        return $this;
+    }
+
+
+    /**
+     * Allows adding exceptions to previously declared rules.
+     *
+     * @example
+     * $architecture = new Architecture([
+     *      'PackageOne' => 'Vendor\\Namespace\\PackageOne',
+     *      'PackageTwo' => 'Vendor\\Namespace\\PackageTwo',
+     *      'PackageThree' => 'Vendor\\Namespace\\PackageThree'
+     * ]);
+     *
+     * $architecture->disallowInterdependence([ 'PackageOne', 'PackageTwo', 'PackageThree' ]);
+     * $architecture->component('PackageThree')->isAllowedToDependOn('PackageOne');
+     *
+     *
+     * @param string $component
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function isAllowedToDependOn(string $component): self
+    {
+        $this->getCurrent()->explicitlyAllowDependency($this->ensureComponentExists($component));
+        return $this;
+    }
+
+
+    /**
+     * Method to declare interdependence:
+     * All components in the first array must not depend on any other components in that array.
+     *
+     * The second key-value array can be used to explicitly allow some dependencies among them.
+     *
+     * Note: The second key-value array only allows dependencies in this specific context.
+     *       If you want to declare a more broadly applicable allowance then the
+     *       {@see Architecture::isAllowedToDependOn} is worth looking at.
+     * Note: This method assumes that all components have been declared before
+     *      (e.g. using the {@see Architecture::components} method).
+     *
+     * @example
+     * $architecture->components([
+     *      'Foo' => 'App\\Foo',
+     *      'Bar' => 'App\\Bar',
+     *      'Baz' => 'App\\Baz',
+     * ]);
+     *
+     * // No dependencies between all 3 components allowed - except for Foo => Baz.
+     * $architecture->disallowInterdependence(
+     *      [ 'Foo', 'Bar', 'Baz' ],
+     *      [ 'Foo' => [ 'Baz' ] ]
+     * );
+     *
+     * @param string[] $components
+     * @param string[][] $allowed
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function disallowInterdependence(array $components, array $allowed = []): self
+    {
+        ArrayUtility::forEachCombinationInArray($components, function (string $source, string $target) use ($allowed) {
+            if (\in_array($target, $allowed[$source] ?? [], true)) {
+                return;
+            }
+            $this->component($source)->mustNotDependOn($target);
+        });
+
+        return $this;
+    }
+
+    /**
+     * Declares that the current component must not depend on any other previously defined components.
+     *
+     * Note: This method assumes that all components have been declared before
+     *      (e.g. using the {@see Architecture::components} method).
+     *
+     * @example
+     * $architecture->components([
+     *      'Core' => 'App\\Core',
+     *      'Utilities' => 'App\\Utility',
+     *      'Events' => 'App\\Event',
+     * ]);
+     *
+     * $architecture->component('Core')->mustNotDependOnAnyOtherComponent();
+     *
+     * @return Architecture
+     * @throws ComponentNotDefinedException
+     */
+    public function mustNotDependOnAnyOtherComponent(): self
+    {
+        $current = $this->getCurrent();
+        foreach ($this->components as $component) {
+            if ($current !== $component) {
+                $current->mustNotDependOn($component);
+            }
+        }
         return $this;
     }
 

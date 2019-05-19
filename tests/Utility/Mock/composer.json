@@ -1,0 +1,19 @@
+{
+    "name": "j6s/phparch-mock",
+    "require": {
+        "thecodingmachine/safe": "^0.1.15"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "J6s\\PhpArchMock": "FooBar"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "J6s\\PhpArchMock\\Tests": "FooBar/Tests"
+        }
+    }
+}

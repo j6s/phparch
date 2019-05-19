@@ -2,10 +2,15 @@
 
 namespace J6s\PhpArch\Component;
 
+use J6s\PhpArch\Utility\ArrayUtility;
+use J6s\PhpArch\Utility\ComposerFileParser;
 use J6s\PhpArch\Validation\AbstractValidationCollection;
 use J6s\PhpArch\Validation\AllowInterfaces;
+use J6s\PhpArch\Validation\ExplicitlyAllowDependency;
 use J6s\PhpArch\Validation\ForbiddenDependency;
 use J6s\PhpArch\Validation\MustOnlyDependOn;
+use J6s\PhpArch\Validation\MustOnlyHaveAutoloadableDependencies;
+use J6s\PhpArch\Validation\MustOnlyDependOnComposerDependencies;
 use J6s\PhpArch\Validation\ValidationCollection;
 use J6s\PhpArch\Validation\Validator;
 
@@ -13,6 +18,7 @@ class Component extends AbstractValidationCollection
 {
     private const MUST_NOT_DEPEND_ON = 'mustNotDepend';
     private const MUST_ONLY_DEPEND_ON = 'mustOnlyDependOn';
+    private const MUST_ONLY_DEPEND_ON_COMPOSER_DEPENDENCIES = 'mustOnlyDependOnComposerDependencies';
 
     /**
      * @var string
@@ -26,6 +32,9 @@ class Component extends AbstractValidationCollection
     private $namespaces = [];
 
     private $rules = [];
+
+    /** @var Component[] */
+    private $explicitlyAllowed = [];
 
     public function __construct(string $name)
     {
@@ -51,6 +60,20 @@ class Component extends AbstractValidationCollection
         ];
     }
 
+    public function mustOnlyDependOnComposerDependencies(ComposerFileParser $parser, bool $includeDev = false): void
+    {
+        $this->rules[] = [
+            'type' => self::MUST_ONLY_DEPEND_ON_COMPOSER_DEPENDENCIES,
+            'parser' => $parser,
+            'includeDev' => $includeDev
+        ];
+    }
+
+    public function explicitlyAllowDependency(Component $component)
+    {
+        $this->explicitlyAllowed[] = $component;
+    }
+
     public function getNamespaces(): array
     {
         return $this->namespaces;
@@ -68,58 +91,93 @@ class Component extends AbstractValidationCollection
 
     protected function getValidators(): array
     {
-        return array_map(
-            function (array $rule) {
-                return $this->ruleToValidator($rule);
-            },
-            $this->rules
-        );
-    }
+        $collection = new ValidationCollection();
+        foreach ($this->rules as $rule) {
+            $collection->addValidator($this->ruleToValidator($rule));
+        }
 
-    private function ruleToValidator(array $rule): Validator
-    {
-        $validator = new ValidationCollection();
-
-        foreach ($this->getNamespaces() as $fromNamespace) {
-            foreach ($rule['component']->getNamespaces() as $toNamespace) {
-                $validator->addValidator(
-                    $this->createValidator($rule['type'], $fromNamespace, $toNamespace, $rule['component'])
+        foreach ($this->explicitlyAllowed as $component) {
+            foreach ($this->namespaces as $fromNamespace) {
+                $collection = new ExplicitlyAllowDependency(
+                    $collection,
+                    $fromNamespace,
+                    $component->getNamespaces()
                 );
             }
         }
 
-        if ($rule['allowInterfaces']) {
+        return [ $collection, new MustOnlyHaveAutoloadableDependencies() ];
+    }
+
+    private function ruleToValidator(array $rule): Validator
+    {
+        $type = $rule['type'] ?? '[UNKNOWN]';
+
+        switch ($type) {
+            case self::MUST_NOT_DEPEND_ON:
+                $validator = $this->mustNotDependOnValidator($rule['component']);
+                break;
+            case self::MUST_ONLY_DEPEND_ON:
+                $validator = $this->mustOnlyDependOnValidator($rule['component']);
+                break;
+            case self::MUST_ONLY_DEPEND_ON_COMPOSER_DEPENDENCIES:
+                $validator = $this->mustOnlyDependOnComposerDependenciesValidator(
+                    $rule['parser'],
+                    $rule['includeDev'] ?? false
+                );
+                break;
+            default:
+                throw new \InvalidArgumentException('Cannot build rule of type ' . $type);
+        }
+
+
+        if ($rule['allowInterfaces'] ?? false) {
             $validator = new AllowInterfaces($validator);
         }
 
         return $validator;
     }
 
-    private function createValidator(
-        string $type,
-        string $fromNamespace,
-        string $toNamespace,
-        Component $component
-    ): Validator {
-        switch ($type) {
-            case self::MUST_NOT_DEPEND_ON:
-                return new ForbiddenDependency(
+    private function mustNotDependOnValidator(Component $component): Validator
+    {
+        $validators = new ValidationCollection();
+        foreach ($this->namespaces as $fromNamespace) {
+            foreach ($component->getNamespaces() as $toNamespace) {
+                $validators->addValidator(new ForbiddenDependency(
                     $fromNamespace,
                     $toNamespace,
                     $this . ' must not depend on ' . $component .
                     ' but :violatingFrom depends on :violatingTo'
-                );
+                ));
+            }
+        }
+        return $validators;
+    }
 
-            case self::MUST_ONLY_DEPEND_ON:
-                return new MustOnlyDependOn(
+    private function mustOnlyDependOnValidator(Component $component): Validator
+    {
+        $validators = new ValidationCollection();
+        foreach ($this->namespaces as $fromNamespace) {
+            foreach ($component->getNamespaces() as $toNamespace) {
+                $validators->addValidator(new MustOnlyDependOn(
                     $fromNamespace,
                     $toNamespace,
-                    $this . ' must only depend on ' . $component .
+                    $this . ' must not depend on ' . $component .
                     ' but :violatingFrom depends on :violatingTo'
-                );
-
-            default:
-                throw new \InvalidArgumentException('Cannot build rule of type ' . $type);
+                ));
+            }
         }
+        return $validators;
+    }
+
+    private function mustOnlyDependOnComposerDependenciesValidator(
+        ComposerFileParser $parser,
+        bool $includeDev
+    ): Validator {
+        $validators = new ValidationCollection();
+        foreach ($this->namespaces as $fromNamespace) {
+            $validators->addValidator(new MustOnlyDependOnComposerDependencies($fromNamespace, $parser, $includeDev));
+        }
+        return $validators;
     }
 }

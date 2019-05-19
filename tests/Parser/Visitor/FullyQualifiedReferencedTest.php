@@ -6,6 +6,7 @@ use J6s\PhpArch\Tests\Parser\Visitor\Example\InstanceCreation\ImportedInstanceCr
 use J6s\PhpArch\Tests\Parser\Visitor\Example\ParentClass;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\SomeInterface;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\StaticMethodCall\ImportedStaticMethodCall;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\TestClass;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\Traits\ImporetdTrait;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\Traits\UsedTrait;
 use J6s\PhpArch\Tests\TestCase;
@@ -87,6 +88,27 @@ class FullyQualifiedReferencedTest extends TestCase
     public function testExtractsImportedReturnTypeAnnotations(): void
     {
         $this->assertContains(Example\TypeAnnotation\ImportedReturnTypeAnnotation::class, $this->extracted);
+    }
+
+    public function testIgnoresScalarTypeHints()
+    {
+        $this->assertNotContains('string', $this->extracted);
+        $this->assertNotContains('int', $this->extracted);
+    }
+
+    public function testIgnoresSimpleFunctionCalls()
+    {
+        $this->assertNotContains('count', $this->extracted);
+    }
+
+    public function testIncludesNonExistingClasses()
+    {
+        $this->assertContains('Foo\Bar\This\Does\Not\Exist', $this->extracted);
+    }
+
+    public function testParsesReferencesToItselfCorrectly()
+    {
+        $this->assertContains(TestClass::class, $this->extracted);
     }
 
 }
