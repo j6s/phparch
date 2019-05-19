@@ -9,6 +9,7 @@ use phpDocumentor\Reflection\TypeResolver;
 use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node;
+use function Safe\preg_replace;
 
 class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
 {
@@ -38,6 +39,7 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
         $factory  = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
 
         foreach ($docBlocks as $docBlockString) {
+            $docBlockString = preg_replace('/array\<(\w+)\>/', '\1[]', $docBlockString);
             try {
                 $docBlock = $factory->create((string) $docBlockString);
             } catch (\InvalidArgumentException $e) {
