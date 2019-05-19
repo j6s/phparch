@@ -334,7 +334,7 @@ class Architecture extends ValidationCollection
      * );
      *
      * @param string[] $components
-     * @param array<string, string>[] $allowed
+     * @param string[][] $allowed
      * @return Architecture
      * @throws ComponentNotDefinedException
      */

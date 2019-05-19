@@ -39,9 +39,9 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
         $factory  = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
 
         foreach ($docBlocks as $docBlockString) {
-            $docBlockString = preg_replace('/array\<(\w+)\>/', '\1[]', $docBlockString);
+            $docBlockString = $this->transformArraySyntax($docBlockString);
             try {
-                $docBlock = $factory->create((string) $docBlockString);
+                $docBlock = $factory->create($docBlockString);
             } catch (\InvalidArgumentException $e) {
                 throw new ParserException(
                     sprintf("Error parsing dockblock \n\n %s \n\n %s", $docBlockString, $e->getMessage()),
@@ -59,6 +59,15 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
                 }
             }
         }
+    }
+
+    private function transformArraySyntax(string $docBlockString): string
+    {
+        $docBlockString = preg_replace('/array\<(\w+)\>/', '\1[]', $docBlockString);
+        if (\is_array($docBlockString)) {
+            return implode('', $docBlockString);
+        }
+        return $docBlockString;
     }
 
     private function typeToFullyQualified(Type $type, Context $context): ?string

@@ -44,20 +44,7 @@ class ComposerFileParser
      */
     public function getNamespaces(bool $includeDev = false): array
     {
-        $namespaces = array_merge(
-            array_keys($this->composerFile['autoload']['psr-0'] ?? []),
-            array_keys($this->composerFile['autoload']['psr-4'] ?? [])
-        );
-
-        if ($includeDev) {
-            $namespaces = array_merge(
-                $namespaces,
-                array_keys($this->composerFile['autoload-dev']['psr-0'] ?? []),
-                array_keys($this->composerFile['autoload-dev']['psr-4'] ?? [])
-            );
-        }
-
-        return $namespaces;
+        return $this->extractNamespaces($this->composerFile, $includeDev);
     }
 
     /**
@@ -81,10 +68,15 @@ class ComposerFileParser
      */
     public function getDirectDependencies(bool $includeDev): array
     {
-        $required = array_keys($this->composerFile['require'] ?? []);
+        $required = [];
+        foreach (array_keys($this->composerFile['require'] ?? []) as $packageName) {
+            $required[] = (string) $packageName;
+        }
 
         if ($includeDev) {
-            $required = array_merge($required, array_keys($this->composerFile['require-dev'] ?? []));
+            foreach (array_keys($this->composerFile['require-dev'] ?? []) as $packageName) {
+                $required[] = (string) $packageName;
+            }
         }
 
         return $required;
@@ -104,17 +96,8 @@ class ComposerFileParser
         foreach ($requirements as $package) {
             $namespaces = array_merge(
                 $namespaces,
-                array_keys($this->lockedPackages[$package]['autoload']['psr-0'] ?? []),
-                array_keys($this->lockedPackages[$package]['autoload']['psr-4'] ?? [])
+                $this->extractNamespaces($this->lockedPackages[$package], $includeDev)
             );
-
-            if ($includeDev) {
-                $namespaces = array_merge(
-                    $namespaces,
-                    array_keys($this->lockedPackages[$package]['autoload-dev']['psr-0'] ?? []),
-                    array_keys($this->lockedPackages[$package]['autoload-dev']['psr-4'] ?? [])
-                );
-            }
         }
 
         return $namespaces;
@@ -176,5 +159,27 @@ class ComposerFileParser
         }
 
         return $lockedPackages;
+    }
+
+    private function extractNamespaces(array $package, bool $includeDev): array
+    {
+        $namespaces = [];
+        foreach (array_keys($this->composerFile['autoload']['psr-0'] ?? []) as $namespace) {
+            $namespaces[] = (string) $namespace;
+        }
+        foreach (array_keys($this->composerFile['autoload']['psr-4'] ?? []) as $namespace) {
+            $namespaces[] = (string) $namespace;
+        }
+
+        if ($includeDev) {
+            foreach (array_keys($this->composerFile['autoload-dev']['psr-0'] ?? []) as $namespace) {
+                $namespaces[] = (string) $namespace;
+            }
+            foreach (array_keys($this->composerFile['autoload-dev']['psr-4'] ?? []) as $namespace) {
+                $namespaces[] = (string) $namespace;
+            }
+        }
+
+        return $namespaces;
     }
 }
