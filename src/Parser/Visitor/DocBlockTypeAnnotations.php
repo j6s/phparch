@@ -1,6 +1,7 @@
 <?php
 namespace J6s\PhpArch\Parser\Visitor;
 
+use J6s\PhpArch\Parser\ParserException;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use phpDocumentor\Reflection\DocBlock\Tags\Return_;
 use phpDocumentor\Reflection\Type;
@@ -37,7 +38,15 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
         $factory  = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
 
         foreach ($docBlocks as $docBlockString) {
-            $docBlock = $factory->create((string) $docBlockString);
+            try {
+                $docBlock = $factory->create((string) $docBlockString);
+            } catch (\InvalidArgumentException $e) {
+                throw new ParserException(
+                    sprintf("Error parsing dockblock \n\n %s \n\n %s", $docBlockString, $e->getMessage()),
+                    $e->getCode(),
+                    $e
+                );
+            }
 
             foreach ($docBlock->getTags() as $tag) {
                 if (($tag instanceof Param || $tag instanceof Return_) && $tag->getType() !== null) {
