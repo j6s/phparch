@@ -2,14 +2,12 @@
 
 namespace J6s\PhpArch\Component;
 
-use J6s\PhpArch\Utility\ArrayUtility;
 use J6s\PhpArch\Utility\ComposerFileParser;
 use J6s\PhpArch\Validation\AbstractValidationCollection;
 use J6s\PhpArch\Validation\AllowInterfaces;
 use J6s\PhpArch\Validation\ExplicitlyAllowDependency;
 use J6s\PhpArch\Validation\ForbiddenDependency;
 use J6s\PhpArch\Validation\MustOnlyDependOn;
-use J6s\PhpArch\Validation\MustOnlyHaveAutoloadableDependencies;
 use J6s\PhpArch\Validation\MustOnlyDependOnComposerDependencies;
 use J6s\PhpArch\Validation\ValidationCollection;
 use J6s\PhpArch\Validation\Validator;
@@ -106,7 +104,7 @@ class Component extends AbstractValidationCollection
             }
         }
 
-        return [ $collection, new MustOnlyHaveAutoloadableDependencies() ];
+        return [ $collection ];
     }
 
     private function ruleToValidator(array $rule): Validator
