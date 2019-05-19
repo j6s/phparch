@@ -26,7 +26,7 @@ class ComposerFileParser
     public function __construct(string $composerFile, string $lockFile = null)
     {
         if ($lockFile === null) {
-            $lockFile = substr($composerFile, 0, -4) . '.lock';
+            $lockFile = substr($composerFile, 0, -5) . '.lock';
         }
 
         $this->composerFile = json_decode(file_get_contents($composerFile), true);
