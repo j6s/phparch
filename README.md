@@ -54,6 +54,9 @@ Currently the following validators are available:
   This can be helpful if two packages should not have any dependencies on each other but they still sneak in because
   the packages are often used together.
 - `AllowInterfaces` is a wrapper for validators that allows dependencies if they are to interfaces.
+- `MustOnlyDependOnComposerDependencies` checks if all dependencies in a given namespace are declared in the given
+  `composer.json` file. This is useful to prevent accidental dependencies if one repository contains multiple packages.
+- `ExplicitlyAllowDependency` is a wrapper for validators that allows a specific dependency.
 
 Most architectural boundaries can be described with these rules.
 
@@ -81,8 +84,13 @@ Most of defining an architecture is only syntactic sugar over the namespace vali
 The following methods allow you to add assertions to your component structure:
 
 - `mustNotDependOn`
+- `mustNotDependDirectlyOn`
 - `mustNotBeDependedOnBy`
 - `mustOnlyDependOn`
+- `mustNotDependOnAnyOtherComponent`
+- `mustOnlyDependOnComposerDependencies`
+- `dissallowInterdependence`
+- `isAllowedToDependOn`
 
 ### Syntactic sugar: Bulk definition of components
 
@@ -129,6 +137,32 @@ methods available:
 (new Architecture())
     ->component('Foo')->mustNotDependOn('Bar')
     ->component('Foo')->mustNotDependOn('Baz')
+```
+
+### Shorthand for monorepos: `addComposerBasedComponent`
+
+In case one repository contains multiple packages that all have their own `composer.json`
+file it is easy to accidentally use a method or class of something that is not in the `composer.json`
+file of the current package.
+
+To prevent this the `Architecture->mustOnlyDependOnComposerDependencies` method and the 
+`MustOnlyDependOnComposerDependencies` validator can be used to check if all used namespaces are
+declared in a given `composer.json` file:
+
+```php
+$architecture = (new Architecture)
+    ->component('vendor/subpackage')
+    ->identifierByNamespace('Vendor\\Subpackage\\')
+    ->mustOnlyDependOnComposerDependencies('packages/subpackage/composer.json');
+```
+
+However, `composer.json` already contains information about the package name and namespaces.
+Therefor the `addComposerBasedComponent` method can be used in order to make
+things easier:
+
+```php
+$architecture = (new Architecture)
+    ->addComposerBasedComponent('packages/subpackage/composer.json');
 ```
 
 ## Examples
