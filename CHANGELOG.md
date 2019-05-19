@@ -4,11 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [1.1.0] - 2019-05-19
 ### Added
-- A new `MustOnlyHaveAutoloadableDependencies` has been added in order to prevent accidental dependencies
-  to unrelated packages that just happen to be used in the same system often. All components in architectures
-  are now being checked against this new validator.
+- A new `MustOnlyHaveAutoloadableDependencies` validator has been added in order to prevent accidental dependencies
+  to unrelated packages that just happen to be used in the same system often.
+    - All components in architectures are now being checked against this new validator.
+- A new `MustOnlyDependOnComposerDependencies` validator has been added in order to prevent accidentally using
+  namespaces that are not also declared in `composer.json`.
+- A new `ExplicitlyAllowDependency` validator allows explicitly allowing dependencies from one component to another.
+- Architectures now have a bunch of new helper methods
+    - `mustOnlyDependOnComposerDependencies` adds `MustOnlyDependOnComposerDependencies` validator.
+    - `addComposerBasedComponent` initializes a full component from the given `composer.json` file and
+      adds a `MustOnlyDependOnComposerDependencies` validator
+    - `isAllowedToDependOn` allows dependencies from one component to another one.
+    - `disallowInterdependence` makes it easy to disallow dependence between many different components.
+    - `mustNotDependOnAnyOtherComponent` makes it easy to declare core components that should not depend on
+      anything else that is architecturally significant.
+    
+### Removed
+- Support for PHP 7.1 was dropped
 
 ## [1.0.0] - 2019-02-18
 ### Added
