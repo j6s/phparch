@@ -29,7 +29,11 @@ class PhpArch
     public function assertHasNoErrors(): void
     {
         $errors = $this->errors();
-        Assert::assertEmpty($errors, implode("\n", $errors));
+        Assert::assertEmpty($errors, sprintf(
+            "%s \n\n\t %d errors occurred while validating architecture\n",
+            implode("\n", $errors),
+            \count($errors)
+        ));
     }
 
     /**
