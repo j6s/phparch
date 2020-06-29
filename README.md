@@ -30,7 +30,7 @@ $ composer require j6s/phparch
 ## Simple Namespace validation
 
 The most simple type of check PHPArch can help you with are simple namespace based checks:
-Setup rules for which namespace is allowed for forbidden to depend on which other namespace.
+Setup rules for which namespace is allowed or forbidden to depend on which other namespace.
 
 ```php
 public function testSimpleNamespaces()
@@ -62,7 +62,7 @@ Most architectural boundaries can be described with these rules.
 
 ## Defining an architecture
 
-PHPArch also contains a fluent API that allows you to define a component based Architecture which is then validated.
+PHPArch also contains a fluent API that allows you to define a component based architecture which is then validated.
 The API is based on components which are identified by one or more namespaces instead of Layers or 'Onion Peels' because
 it is the simplest way to communicate any architecture - no matter what the implementation details of it are.
 
@@ -120,7 +120,7 @@ If a non-existing component is referenced in one of these methods then it will b
 These methods will also set the referenced component as the currently active one - so when using
 `->mustNotDependOn('FooBar')` all future operations reference the `FooBar` component.
 
-In order to chain multiple dependency rules for a single component there are some convinience
+In order to chain multiple dependency rules for a single component there are some convenience
 methods available:
 
 - `andMustNotDependOn`
@@ -157,7 +157,7 @@ $architecture = (new Architecture)
 ```
 
 However, `composer.json` already contains information about the package name and namespaces.
-Therefor the `addComposerBasedComponent` method can be used in order to make
+Therefore the `addComposerBasedComponent` method can be used in order to make
 things easier:
 
 ```php
@@ -167,4 +167,4 @@ $architecture = (new Architecture)
 
 ## Examples
 
-- [PHPArch tests it's own architecture](./tests/ArchitectureTest.php)
+- [PHPArch tests its own architecture](./tests/ArchitectureTest.php)
