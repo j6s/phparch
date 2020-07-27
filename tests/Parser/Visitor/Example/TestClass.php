@@ -3,6 +3,8 @@ namespace J6s\PhpArch\Tests\Parser\Visitor\Example;
 
 use Foo\Bar\Baz;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedAnonymousClassDocBlockArgument;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedGenericArgument;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedGenericClassArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\InstanceCreation\ImportedInstanceCreation;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\Traits\ImporetdTrait;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\TypeAnnotation\ImportedArgumentAnnotation;
@@ -120,5 +122,14 @@ class TestClass extends ParentClass implements SomeInterface
             {
             }
         };
+    }
+
+    /**
+     * @param ImportedGenericClassArgument<ImportedGenericArgument> $argument
+     * @return ImportedGenericClassArgument<ImportedGenericArgument>
+     */
+    public function genericsInDocBlock($argument)
+    {
+
     }
 }

@@ -6,6 +6,7 @@ use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use phpDocumentor\Reflection\DocBlock\Tags\Return_;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
+use phpDocumentor\Reflection\Types\Collection;
 use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node;
@@ -52,9 +53,23 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
 
             foreach ($docBlock->getTags() as $tag) {
                 if (($tag instanceof Param || $tag instanceof Return_) && $tag->getType() !== null) {
-                    $type = $this->typeToFullyQualified($tag->getType(), $context);
-                    if ($type) {
-                        $this->namespaces[] = $type;
+                    $type = $tag->getType();
+                    $typesToResolve = [];
+
+                    if ($type instanceof Object_) {
+                        $typesToResolve[] = $type;
+                    }
+                    // To resolve generic definitions correctly we have to split the type into its original
+                    // type and the value part.
+                    if ($type instanceof Collection) {
+                        $typesToResolve[] = new Object_($type->getFqsen());
+                        $typesToResolve[] = $type->getValueType();
+                    }
+                    foreach ($typesToResolve as $typeToResolve) {
+                        $type = $this->typeToFullyQualified($typeToResolve, $context);
+                        if ($type) {
+                            $this->namespaces[] = $type;
+                        }
                     }
                 }
             }
