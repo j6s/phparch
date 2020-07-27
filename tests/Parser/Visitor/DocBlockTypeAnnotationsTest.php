@@ -9,6 +9,8 @@ use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockReturn;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedAnonymousClassDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockReturn;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedGenericArgument;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedGenericClassArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\TestClass;
 use J6s\PhpArch\Tests\TestCase;
 
@@ -72,6 +74,12 @@ class DocBlockTypeAnnotationsTest extends TestCase
     public function testParsesReferencesToItselfCorrectly()
     {
         $this->assertContains(TestClass::class, $this->extracted);
+    }
+
+    public function testIncludesGenericClasses()
+    {
+        $this->assertContains(ImportedGenericClassArgument::class, $this->extracted);
+        $this->assertContains(ImportedGenericArgument::class, $this->extracted);
     }
 
 }
