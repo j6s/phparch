@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2020-07-27
+### Added
+- Types used inside of generics are now also tracked correctly.
+
 ## [1.1.2] - 2020-03-02
 ### Added
 - Support for `symfony/finder` 5.x. This means phparch will install in symfony 4 & 5 environments.
