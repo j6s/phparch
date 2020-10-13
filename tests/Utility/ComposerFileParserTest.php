@@ -11,7 +11,7 @@ class ComposerFileParserTest extends TestCase
     /** @var ComposerFileParser */
     private $subject;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->subject = new ComposerFileParser(__DIR__ . '/Mock/composer.json');

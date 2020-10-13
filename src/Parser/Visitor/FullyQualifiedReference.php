@@ -19,6 +19,7 @@ class FullyQualifiedReference extends NamespaceCollectingVisitor
         if ($node instanceof Node\Name\FullyQualified && !$this->isCallToSimpleFunction($node)) {
             $this->namespaces[] = (string) $node;
         }
+        return null;
     }
 
     private function isCallToSimpleFunction(Node\Name\FullyQualified $node): bool

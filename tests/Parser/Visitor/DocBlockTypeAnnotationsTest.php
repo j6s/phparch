@@ -20,7 +20,7 @@ class DocBlockTypeAnnotationsTest extends TestCase
     /** @var string[] */
     protected $extracted;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $visitor = new DocBlockTypeAnnotations();
