@@ -3,6 +3,7 @@ language: php
 php:
   - '7.2'
   - '7.3'
+  - '7.4'
 env:
   - COMPOSER_LOWEST=0
   - COMPOSER_LOWEST=1
@@ -17,5 +18,5 @@ install:
 
 script:
   - ./vendor/bin/phpcs
-  - ./vendor/bin/phpstan analyze --level 7 src
+  - ./vendor/bin/phpstan
   - ./vendor/bin/phpunit

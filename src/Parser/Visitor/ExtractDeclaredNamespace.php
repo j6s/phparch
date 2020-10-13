@@ -15,6 +15,7 @@ class ExtractDeclaredNamespace extends NodeVisitorAbstract
         if ($node instanceof Node\Stmt\ClassLike && isset($node->namespacedName) && $node->namespacedName  !== null) {
             $this->declared = $node->namespacedName->toString();
         }
+        return null;
     }
 
     public function declaresNamespace(): bool
