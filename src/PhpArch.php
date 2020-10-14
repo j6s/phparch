@@ -1,12 +1,14 @@
 <?php
 namespace J6s\PhpArch;
 
+use J6s\PhpArch\Exception\CodeAnalysisException;
 use J6s\PhpArch\Parser\Parser;
 use J6s\PhpArch\Validation\ValidationCollection;
 use J6s\PhpArch\Validation\Validator;
 use PhpParser\ParserFactory;
 use Symfony\Component\Finder\Finder;
 use PHPUnit\Framework\Assert;
+use PhpParser\Error as PhpParserError;
 
 class PhpArch
 {
@@ -48,7 +50,16 @@ class PhpArch
         $finder = $this->getFinder();
 
         foreach ($finder->getIterator() as $file) {
-            $abstractSyntaxTree = $phpParser->parse($file->getContents());
+            try {
+                $abstractSyntaxTree = $phpParser->parse($file->getContents());
+            } catch (PhpParserError $e) {
+                throw new CodeAnalysisException(
+                    sprintf('Error parsing file `%s`', $file->getPathname()),
+                    $e->getCode(),
+                    $e
+                );
+            }
+
             if ($abstractSyntaxTree === null) {
                 continue;
             }

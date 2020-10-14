@@ -11,5 +11,6 @@ class UseStatement extends NamespaceCollectingVisitor
         if ($node instanceof Node\Stmt\UseUse) {
             $this->namespaces[] = $node->name->toString();
         }
+        return null;
     }
 }

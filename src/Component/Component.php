@@ -29,6 +29,9 @@ class Component extends AbstractValidationCollection
      */
     private $namespaces = [];
 
+    /**
+     * @var array
+     */
     private $rules = [];
 
     /** @var Component[] */
@@ -67,7 +70,7 @@ class Component extends AbstractValidationCollection
         ];
     }
 
-    public function explicitlyAllowDependency(Component $component)
+    public function explicitlyAllowDependency(Component $component): void
     {
         $this->explicitlyAllowed[] = $component;
     }

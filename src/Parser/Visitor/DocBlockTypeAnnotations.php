@@ -33,6 +33,7 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
                 $this->extractDocBlocks((array)$node->getAttribute('comments'), $context);
             }
         }
+        return null;
     }
 
     private function extractDocBlocks(array $docBlocks, Context $context): void
