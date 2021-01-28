@@ -163,7 +163,7 @@ class Component extends AbstractValidationCollection
                 $validators->addValidator(new MustOnlyDependOn(
                     $fromNamespace,
                     $toNamespace,
-                    $this . ' must not depend on ' . $component .
+                    $this . ' must only depend on ' . $component .
                     ' but :violatingFrom depends on :violatingTo'
                 ));
             }
