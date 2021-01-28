@@ -10,10 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.0.0] - 2020-10-14
 ### Removed
-- Support for PHP7.3
+- Support for PHP 7.2 was dropped
 
-## Changed
-- Major updates to dependencies 
+### Changed
+* Dependencies were updated
+    *  `phpunit/phpunit` to 9.4+
+    * `thecodingmachine/safe` to 1.3+
+    * and more...
+* Added type hints to more methods
 
 ## [1.2.0] - 2020-07-27
 ### Added
