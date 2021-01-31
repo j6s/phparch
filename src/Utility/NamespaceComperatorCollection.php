@@ -27,18 +27,16 @@ class NamespaceComperatorCollection
 {
 
     /** @var NamespaceComperator[]  */
-    private $comperators;
+    private array $comperators;
 
-    /**
-     * @param string|string[] $namespaces
-     */
+    /** @param string|string[] $namespaces */
     public function __construct($namespaces)
     {
         if (is_string($namespaces)) {
             $namespaces = [ $namespaces ];
         }
         $this->comperators = array_map(
-            function (string $namespace) {
+            static function (string $namespace) {
                 return new NamespaceComperator($namespace);
             },
             $namespaces

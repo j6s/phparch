@@ -2,6 +2,7 @@
 namespace J6s\PhpArch\Parser\Visitor;
 
 use PhpParser\Node;
+use PhpParser\Node\Name\FullyQualified;
 
 /**
  * Visitor that extracts all references to fully qualified names.
@@ -16,13 +17,13 @@ class FullyQualifiedReference extends NamespaceCollectingVisitor
 
     public function enterNode(Node $node)
     {
-        if ($node instanceof Node\Name\FullyQualified && !$this->isCallToSimpleFunction($node)) {
+        if ($node instanceof FullyQualified && !$this->isCallToSimpleFunction($node)) {
             $this->namespaces[] = (string) $node;
         }
         return null;
     }
 
-    private function isCallToSimpleFunction(Node\Name\FullyQualified $node): bool
+    private function isCallToSimpleFunction(FullyQualified $node): bool
     {
         return function_exists((string) $node);
     }

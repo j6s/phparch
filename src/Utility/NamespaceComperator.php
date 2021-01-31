@@ -19,7 +19,7 @@ class NamespaceComperator
 {
 
     /** @var string[] */
-    private $comparison;
+    private array $comparison;
 
     public function __construct(string $comparison)
     {

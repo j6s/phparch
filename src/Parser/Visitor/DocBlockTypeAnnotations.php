@@ -4,6 +4,7 @@ namespace J6s\PhpArch\Parser\Visitor;
 use J6s\PhpArch\Parser\ParserException;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use phpDocumentor\Reflection\DocBlock\Tags\Return_;
+use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
 use phpDocumentor\Reflection\Types\Collection;
@@ -14,11 +15,10 @@ use function Safe\preg_replace;
 
 class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
 {
-    /** @var string */
-    private $lastNamespace;
+    private string $lastNamespace;
 
     /** @var string[] */
-    private $useStatements = [];
+    private array $useStatements = [];
 
     public function enterNode(Node $node)
     {
@@ -38,7 +38,7 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
 
     private function extractDocBlocks(array $docBlocks, Context $context): void
     {
-        $factory  = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
+        $factory  = DocBlockFactory::createInstance();
 
         foreach ($docBlocks as $docBlockString) {
             $docBlockString = $this->transformArraySyntax($docBlockString);
@@ -79,11 +79,11 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
 
     private function transformArraySyntax(string $docBlockString): string
     {
-        $docBlockString = preg_replace('/array\<(\w+)\>/', '\1[]', $docBlockString);
-        if (\is_array($docBlockString)) {
-            return implode('', $docBlockString);
+        $docBlock = preg_replace('/array\<(\w+)\>/', '\1[]', $docBlockString);
+        if (\is_array($docBlock)) {
+            return implode('', $docBlock);
         }
-        return $docBlockString;
+        return $docBlock;
     }
 
     private function typeToFullyQualified(Type $type, Context $context): ?string

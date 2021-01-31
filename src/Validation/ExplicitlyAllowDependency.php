@@ -7,20 +7,13 @@ use J6s\PhpArch\Utility\NamespaceComperatorCollection;
 class ExplicitlyAllowDependency implements Validator
 {
 
-    /** @var Validator */
-    private $validator;
+    private Validator $validator;
 
-    /** @var NamespaceComperator */
-    private $from;
+    private NamespaceComperator $from;
 
-    /** @var NamespaceComperatorCollection */
-    private $to;
+    private NamespaceComperatorCollection $to;
 
-    /**
-     * @param Validator $validator
-     * @param string $from
-     * @param string|string[] $to
-     */
+    /** @param string|string[] $to */
     public function __construct(Validator $validator, string $from, $to)
     {
         $this->validator = $validator;

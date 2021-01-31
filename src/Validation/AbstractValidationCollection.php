@@ -4,10 +4,10 @@ namespace J6s\PhpArch\Validation;
 abstract class AbstractValidationCollection implements Validator
 {
     /** @var Validator[] */
-    protected $validators = [];
+    protected array $validators = [];
 
     /** @var string[][] */
-    private $errors = [];
+    private array $errors = [];
 
     public function __construct(array $validators = [])
     {

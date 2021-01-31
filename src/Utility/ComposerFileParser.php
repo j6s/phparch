@@ -8,20 +8,15 @@ use function Safe\json_decode;
 class ComposerFileParser
 {
 
-    /** @var string */
-    private $composerFilePath;
+    private string $composerFilePath;
 
-    /** @var array */
-    private $composerFile;
+    private array $composerFile;
 
-    /** @var string */
-    private $lockFilePath;
+    private string $lockFilePath;
 
-    /** @var array */
-    private $lockFile;
+    private array $lockFile;
 
-    /** @var array */
-    private $lockedPackages;
+    private array $lockedPackages;
 
     public function __construct(string $composerFile, string $lockFile = null)
     {
@@ -39,7 +34,6 @@ class ComposerFileParser
     /**
      * Returns an array of all namespaces declared by the current composer file.
      *
-     * @param bool $includeDev
      * @return string[]
      */
     public function getNamespaces(bool $includeDev = false): array
@@ -50,7 +44,6 @@ class ComposerFileParser
     /**
      * Returns an array of all required namespaces including deep dependencies (dependencies of dependencies)
      *
-     * @param bool $includeDev
      * @return string[]
      */
     public function getDeepRequirementNamespaces(bool $includeDev): array
@@ -63,7 +56,6 @@ class ComposerFileParser
     /**
      * Returns an array of directly required package names.
      *
-     * @param bool $includeDev
      * @return string[]
      */
     public function getDirectDependencies(bool $includeDev): array
@@ -86,21 +78,17 @@ class ComposerFileParser
      * Resolves an array of package names to an array of namespaces declared by those packages.
      *
      * @param string[] $requirements
-     * @param bool $includeDev
      * @return string[]
      */
-    public function autoloadableNamespacesForRequirements(array $requirements, bool $includeDev)
+    public function autoloadableNamespacesForRequirements(array $requirements, bool $includeDev): array
     {
-        $namespaces = [];
+        $namespaces = [ [] ];
 
         foreach ($requirements as $package) {
-            $namespaces = array_merge(
-                $namespaces,
-                $this->extractNamespaces($this->lockedPackages[$package], $includeDev)
-            );
+            $namespaces[] = $this->extractNamespaces($this->lockedPackages[$package], $includeDev);
         }
 
-        return $namespaces;
+        return array_merge(...$namespaces);
     }
 
     public function getComposerFilePath(): string

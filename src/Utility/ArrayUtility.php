@@ -16,8 +16,9 @@ class ArrayUtility
      * for large arrays: An element with 50 elements will result in roughly 2500 callback
      * calls.
      *
-     * @param array $elements
-     * @param callable $block
+     * @template T
+     * @param T[] $elements
+     * @param (callable(T, T): void) $block
      */
     public static function forEachCombinationInArray(array $elements, callable $block): void
     {
@@ -34,9 +35,10 @@ class ArrayUtility
      * Calls the given callback for each combination of an element in the first array
      * with each element in the second array.
      *
-     * @param array $first
-     * @param array $second
-     * @param callable $block
+     * @template T
+     * @param T[] $first
+     * @param T[] $second
+     * @param (callable(T, T): void) $block
      */
     public static function forEachCombination(array $first, array $second, callable $block): void
     {

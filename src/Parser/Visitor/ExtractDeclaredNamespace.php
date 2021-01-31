@@ -7,8 +7,7 @@ use PhpParser\NodeVisitorAbstract;
 class ExtractDeclaredNamespace extends NodeVisitorAbstract
 {
 
-    /** @var string */
-    private $declared = '';
+    private string $declared = '';
 
     public function enterNode(Node $node)
     {

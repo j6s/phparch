@@ -12,11 +12,9 @@ use PhpParser\Error as PhpParserError;
 
 class PhpArch
 {
-    /** @var string[] */
-    private $directories = [];
+    private array $directories = [];
 
-    /** @var ValidationCollection */
-    private $validator;
+    private ValidationCollection $validator;
 
     public function __construct()
     {
@@ -45,7 +43,7 @@ class PhpArch
      */
     public function errors(): array
     {
-        $errors = [];
+        $errors = [ [] ];
         $phpParser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         $finder = $this->getFinder();
 
@@ -69,21 +67,16 @@ class PhpArch
 
             foreach ($astParser->getUsedNamespaces() as $namespace) {
                 if (!$this->validator->isValidBetween($astParser->getDeclaredNamespace(), $namespace)) {
-                    $errors = array_merge(
-                        $errors,
-                        $this->validator->getErrorMessage($astParser->getDeclaredNamespace(), $namespace)
-                    );
+                    $errors[] = $this->validator->getErrorMessage($astParser->getDeclaredNamespace(), $namespace);
                 }
             }
         }
-        return $errors;
+
+        return array_merge(...$errors);
     }
 
     /**
      * Adds a new validation.
-     *
-     * @param Validator $validator
-     * @return PhpArch
      */
     public function validate(Validator $validator): self
     {
@@ -93,9 +86,6 @@ class PhpArch
 
     /**
      * Adds a source directory.
-     *
-     * @param string $directory
-     * @return PhpArch
      */
     public function fromDirectory(string $directory): self
     {

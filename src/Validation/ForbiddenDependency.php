@@ -6,14 +6,11 @@ use J6s\PhpArch\Utility\NamespaceComperator;
 class ForbiddenDependency implements Validator
 {
 
-    /** @var NamespaceComperator */
-    private $from;
+    private NamespaceComperator $from;
 
-    /** @var NamespaceComperator */
-    private $to;
+    private NamespaceComperator $to;
 
-    /** @var string */
-    private $message;
+    private string $message;
 
     public function __construct(
         string $from,

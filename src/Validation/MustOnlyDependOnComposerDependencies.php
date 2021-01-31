@@ -13,8 +13,7 @@ use J6s\PhpArch\Utility\ComposerFileParser;
 class MustOnlyDependOnComposerDependencies extends MustOnlyDependOn
 {
 
-    /** @var ComposerFileParser */
-    private $parser;
+    private ComposerFileParser $parser;
 
     public function __construct(
         string $from,

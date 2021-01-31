@@ -18,10 +18,7 @@ class Component extends AbstractValidationCollection
     private const MUST_ONLY_DEPEND_ON = 'mustOnlyDependOn';
     private const MUST_ONLY_DEPEND_ON_COMPOSER_DEPENDENCIES = 'mustOnlyDependOnComposerDependencies';
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
     /**
      * The namespaces which identify this component.
@@ -29,10 +26,7 @@ class Component extends AbstractValidationCollection
      */
     private $namespaces = [];
 
-    /**
-     * @var array
-     */
-    private $rules = [];
+    private array $rules = [];
 
     /** @var Component[] */
     private $explicitlyAllowed = [];

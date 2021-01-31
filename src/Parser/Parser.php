@@ -12,11 +12,10 @@ use PhpParser\NodeVisitor\NameResolver;
 class Parser
 {
 
-    /** @var string */
-    private $declaredNamespace;
+    private string $declaredNamespace;
 
     /** @var string[] */
-    private $usedNamespaces = [];
+    private array $usedNamespaces = [];
 
     public function getDeclaredNamespace(): string
     {
@@ -27,7 +26,6 @@ class Parser
     {
         return $this->usedNamespaces;
     }
-
 
     public function process(array $ast): void
     {
@@ -56,9 +54,7 @@ class Parser
         $traverser->traverse($ast);
     }
 
-    /**
-     * @return NamespaceCollectingVisitor[]
-     */
+    /* @return NamespaceCollectingVisitor[] */
     private function usageExtractors(): array
     {
         return [
