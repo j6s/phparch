@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<ruleset name="PSR2">
+<ruleset name="phparch">
     <file>src/</file>
     <rule ref="PSR2" />
 
     <!-- Enforce the usage of short array style -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax.Found" />
+
+    <!-- Enforce usage of strict_types -->
+    <rule ref="Generic.PHP.RequireStrictTypes" />
 </ruleset>

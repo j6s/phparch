@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace J6s\PhpArch\Validation;
 
@@ -15,21 +15,13 @@ use J6s\PhpArch\Utility\NamespaceComperatorCollection;
 class MustOnlyDependOn implements Validator
 {
 
-    /** @var NamespaceComperator */
-    private $from;
+    private NamespaceComperator $from;
 
-    /** @var NamespaceComperatorCollection */
-    private $to;
+    private NamespaceComperatorCollection $to;
 
-    /** @var string */
-    private $message;
+    private string $message;
 
-    /**
-     * MustOnlyDependOn constructor.
-     * @param string $from
-     * @param string|string[] $to
-     * @param string $message
-     */
+    /** @param string|string[] $to */
     public function __construct(
         string $from,
         $to,

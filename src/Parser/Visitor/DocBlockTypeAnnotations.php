@@ -1,24 +1,27 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace J6s\PhpArch\Parser\Visitor;
 
 use J6s\PhpArch\Parser\ParserException;
 use phpDocumentor\Reflection\DocBlock\Tags\Param;
 use phpDocumentor\Reflection\DocBlock\Tags\Return_;
+use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\TypeResolver;
 use phpDocumentor\Reflection\Types\Collection;
 use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\Object_;
+use PhpParser\Comment\Doc;
 use PhpParser\Node;
+
 use function Safe\preg_replace;
 
 class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
 {
-    /** @var string */
-    private $lastNamespace;
+    private string $lastNamespace;
 
     /** @var string[] */
-    private $useStatements = [];
+    private array $useStatements = [];
 
     public function enterNode(Node $node)
     {
@@ -36,15 +39,16 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
         return null;
     }
 
+    /** @param Doc[] $docBlocks */
     private function extractDocBlocks(array $docBlocks, Context $context): void
     {
-        $factory  = \phpDocumentor\Reflection\DocBlockFactory::createInstance();
+        $factory  = DocBlockFactory::createInstance();
 
         foreach ($docBlocks as $docBlockString) {
-            $docBlockString = $this->transformArraySyntax($docBlockString);
+            $docBlockString = $this->transformArraySyntax((string) $docBlockString);
             try {
                 $docBlock = $factory->create($docBlockString);
-            } catch (\InvalidArgumentException $e) {
+            } catch (\InvalidArgumentException|\RuntimeException $e) {
                 throw new ParserException(
                     sprintf("Error parsing dockblock \n\n %s \n\n %s", $docBlockString, $e->getMessage()),
                     $e->getCode(),
@@ -79,11 +83,11 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
 
     private function transformArraySyntax(string $docBlockString): string
     {
-        $docBlockString = preg_replace('/array\<(\w+)\>/', '\1[]', $docBlockString);
-        if (\is_array($docBlockString)) {
-            return implode('', $docBlockString);
+        $docBlock = preg_replace('/array\<(\w+)\>/', '\1[]', $docBlockString);
+        if (\is_array($docBlock)) {
+            return implode('', $docBlock);
         }
-        return $docBlockString;
+        return $docBlock;
     }
 
     private function typeToFullyQualified(Type $type, Context $context): ?string
@@ -93,13 +97,13 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
         }
 
         // Try to resolve relative to current namespace first
-        $resolvedType = (string) (new TypeResolver())->resolve(ltrim($type, '\\'), $context);
+        $resolvedType = (string) (new TypeResolver())->resolve(ltrim((string) $type, '\\'), $context);
         if (class_exists($resolvedType) || interface_exists($resolvedType) || trait_exists($resolvedType)) {
             return ltrim($resolvedType, '\\');
         }
 
         // Assume absolute reference else
-        return ltrim($type, '\\');
+        return ltrim((string) $type, '\\');
     }
 
     private function extractAlias(Node\Stmt\UseUse $node): string

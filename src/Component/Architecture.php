@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace J6s\PhpArch\Component;
 
 use J6s\PhpArch\Exception\ComponentNotDefinedException;
@@ -9,27 +10,18 @@ use J6s\PhpArch\Utility\ArrayUtility;
 class Architecture extends ValidationCollection
 {
 
-    /**
-     * @var Component[]
-     */
-    private $components = [];
+    /** @var Component[]  */
+    private array $components = [];
 
-    /**
-     * @var Component|null
-     */
-    private $currentComponent;
+    private ?Component $currentComponent = null;
 
-    /**
-     * @var Component|null
-     */
-    private $lastComponent;
+    private ?Component $lastComponent = null;
 
     /**
      * Adds or selects a component that is identified by the given name.
      * Any subsequent declarations of dependencies reference the component with that name.
      *
-     * @param string $name
-     * @return Architecture
+     * @return $this
      */
     public function component(string $name): self
     {
@@ -55,7 +47,7 @@ class Architecture extends ValidationCollection
      *      ->component('Bar')->identifierByNamespace('Vendor\\Bar')->identifiedByNamespace('Vendor\\Deep\\Bar')
      *
      * @param string[]|string[][] $definitions
-     * @return Architecture
+     * @return $this
      * @throws ComponentNotDefinedException
      */
     public function components(array $definitions): self
@@ -84,7 +76,7 @@ class Architecture extends ValidationCollection
      * This method can be called multiple times in order to add multiple namespaces to the component.
      *
      * @param string $namespace
-     * @return Architecture
+     * @return $this
      * @throws ComponentNotDefinedException
      */
     public function identifiedByNamespace(string $namespace): self
@@ -103,8 +95,7 @@ class Architecture extends ValidationCollection
      *      ->component('Logic')->identifiedByNamespace('App\\Logic')
      *      ->mustNotDependOn('IO')->identifiedByNamespace('App\\IO')
      *
-     * @param string $name
-     * @return Architecture
+     * @return $this
      * @throws ComponentNotDefinedException
      */
     public function mustNotDependOn(string $name): self
@@ -126,8 +117,7 @@ class Architecture extends ValidationCollection
      *      ->component('Logic')->identifiedByNamespace('App\\Logic')
      *      ->mustNotDirectlyDependOn('IO')->identifiedByNamespace('App\\IO')
      *
-     * @param string $name
-     * @return Architecture
+     * @return $this
      * @throws ComponentNotDefinedException
      */
     public function mustNotDirectlyDependOn(string $name): self
@@ -149,8 +139,7 @@ class Architecture extends ValidationCollection
      *      ->andMustNotDependOn('Controllers')
      *
      *
-     * @param string $name
-     * @return Architecture
+     * @return $this
      * @throws ComponentNotDefinedException
      */
     public function andMustNotDependOn(string $name): self
@@ -169,8 +158,7 @@ class Architecture extends ValidationCollection
      *      ->component('IO')->identifiedByNamespace('App\\IO')
      *      ->mustNotBeDependedOnBy('Logic')->identifiedBy('App\\Logic');
      *
-     * @param string $name
-     * @return Architecture
+     * @return $this
      * @throws ComponentNotDefinedException
      */
     public function mustNotBeDependedOnBy(string $name): self
@@ -193,8 +181,7 @@ class Architecture extends ValidationCollection
      *      ->mustNotBeDependedOnBy('Logic')
      *      ->andMustNotBeDependedOnBy('Controllers')
      *
-     * @param string $name
-     * @return Architecture
+     * @return $this
      * @throws ComponentNotDefinedException
      */
     public function andMustNotBeDependedOnBy(string $name): self
@@ -207,8 +194,7 @@ class Architecture extends ValidationCollection
      * Declares that the currently selected component must only depend on the component with the
      * given name or itself.
      *
-     * @param string $name
-     * @return Architecture
+     * @return $this
      * @throws ComponentNotDefinedException
      */
     public function mustOnlyDependOn(string $name): self
@@ -236,10 +222,7 @@ class Architecture extends ValidationCollection
      * $monorepo->component('PackageOne')->mustOnlyDependOnComposerDependencies('Packages/PackageOne/composer.json');
      * $monorepo->component('PackageTwo')->mustOnlyDependOnComposerDependencies('Packages/PackageTwo/composer.json');
      *
-     * @param string $composerFile
-     * @param string|null $lockFile
-     * @param bool $includeDev
-     * @return Architecture
+     * @return $this
      * @throws ComponentNotDefinedException
      */
     public function mustOnlyDependOnComposerDependencies(
@@ -264,10 +247,6 @@ class Architecture extends ValidationCollection
      *      ->addComposerBasedComponent('Packages/PackageOne/composer.json')
      *      ->addComposerBasedComponent('Packages/PackageTwo/composer.json');
      *
-     * @param string $composerFile
-     * @param string|null $lockFile
-     * @param string|null $componentName
-     * @param bool $includeDev
      * @return $this
      * @throws ComponentNotDefinedException
      */
@@ -303,8 +282,7 @@ class Architecture extends ValidationCollection
      * $architecture->component('PackageThree')->isAllowedToDependOn('PackageOne');
      *
      *
-     * @param string $component
-     * @return Architecture
+     * @return $this
      * @throws ComponentNotDefinedException
      */
     public function isAllowedToDependOn(string $component): self
@@ -341,7 +319,7 @@ class Architecture extends ValidationCollection
      *
      * @param string[] $components
      * @param string[][] $allowed
-     * @return Architecture
+     * @return $this
      * @throws ComponentNotDefinedException
      */
     public function disallowInterdependence(array $components, array $allowed = []): self
@@ -371,7 +349,7 @@ class Architecture extends ValidationCollection
      *
      * $architecture->component('Core')->mustNotDependOnAnyOtherComponent();
      *
-     * @return Architecture
+     * @return $this
      * @throws ComponentNotDefinedException
      */
     public function mustNotDependOnAnyOtherComponent(): self
@@ -384,7 +362,6 @@ class Architecture extends ValidationCollection
         }
         return $this;
     }
-
 
     private function getCurrent(): Component
     {

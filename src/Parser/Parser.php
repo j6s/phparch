@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace J6s\PhpArch\Parser;
 
 use J6s\PhpArch\Parser\Visitor\DocBlockTypeAnnotations;
@@ -7,28 +8,29 @@ use J6s\PhpArch\Parser\Visitor\FullyQualifiedReference;
 use J6s\PhpArch\Parser\Visitor\NamespaceCollectingVisitor;
 use J6s\PhpArch\Parser\Visitor\UseStatement;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitor\NameResolver;
 
 class Parser
 {
 
-    /** @var string */
-    private $declaredNamespace;
+    private string $declaredNamespace;
 
     /** @var string[] */
-    private $usedNamespaces = [];
+    private array $usedNamespaces = [];
 
     public function getDeclaredNamespace(): string
     {
         return $this->declaredNamespace;
     }
 
+    /** @return string[] */
     public function getUsedNamespaces(): array
     {
         return $this->usedNamespaces;
     }
 
-
+    /** @param array<string|int, mixed> $ast */
     public function process(array $ast): void
     {
         $declared = new ExtractDeclaredNamespace();
@@ -46,6 +48,10 @@ class Parser
         }
     }
 
+    /**
+     * @param array<string|int, mixed> $ast
+     * @param NodeVisitor[] $visitors
+     */
     private function traverseWithVisitors(array $ast, array $visitors): void
     {
         $traverser = new NodeTraverser();
@@ -56,9 +62,7 @@ class Parser
         $traverser->traverse($ast);
     }
 
-    /**
-     * @return NamespaceCollectingVisitor[]
-     */
+    /** @return NamespaceCollectingVisitor[] */
     private function usageExtractors(): array
     {
         return [

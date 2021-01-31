@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace J6s\PhpArch\Utility;
 
 /**
@@ -19,7 +20,7 @@ class NamespaceComperator
 {
 
     /** @var string[] */
-    private $comparison;
+    private array $comparison;
 
     public function __construct(string $comparison)
     {

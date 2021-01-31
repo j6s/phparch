@@ -1,14 +1,16 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace J6s\PhpArch\Validation;
 
 abstract class AbstractValidationCollection implements Validator
 {
     /** @var Validator[] */
-    protected $validators = [];
+    protected array $validators = [];
 
     /** @var string[][] */
-    private $errors = [];
+    private array $errors = [];
 
+    /** @param Validator[] $validators */
     public function __construct(array $validators = [])
     {
         $this->validators = $validators;
@@ -40,7 +42,7 @@ abstract class AbstractValidationCollection implements Validator
         return $this->errors[$from . $to];
     }
 
-
+    /** @return Validator[] */
     protected function getValidators(): array
     {
         return $this->validators;

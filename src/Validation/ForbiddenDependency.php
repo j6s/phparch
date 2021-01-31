@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace J6s\PhpArch\Validation;
 
 use J6s\PhpArch\Utility\NamespaceComperator;
@@ -6,14 +7,11 @@ use J6s\PhpArch\Utility\NamespaceComperator;
 class ForbiddenDependency implements Validator
 {
 
-    /** @var NamespaceComperator */
-    private $from;
+    private NamespaceComperator $from;
 
-    /** @var NamespaceComperator */
-    private $to;
+    private NamespaceComperator $to;
 
-    /** @var string */
-    private $message;
+    private string $message;
 
     public function __construct(
         string $from,

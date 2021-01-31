@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace J6s\PhpArch\Validation;
 
 use J6s\PhpArch\Utility\ComposerFileParser;
@@ -13,8 +14,7 @@ use J6s\PhpArch\Utility\ComposerFileParser;
 class MustOnlyDependOnComposerDependencies extends MustOnlyDependOn
 {
 
-    /** @var ComposerFileParser */
-    private $parser;
+    private ComposerFileParser $parser;
 
     public function __construct(
         string $from,

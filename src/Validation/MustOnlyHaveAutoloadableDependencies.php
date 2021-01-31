@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace J6s\PhpArch\Validation;
 
 class MustOnlyHaveAutoloadableDependencies implements Validator
 {
-    /** @var string */
-    private $message;
+    private string $message;
 
     public function __construct(
         string $message = ':from must only depend on autoloadable dependencies, but :to is not'

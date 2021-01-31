@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace J6s\PhpArch\Parser\Visitor;
 
 use PhpParser\Node;
@@ -7,8 +8,7 @@ use PhpParser\NodeVisitorAbstract;
 class ExtractDeclaredNamespace extends NodeVisitorAbstract
 {
 
-    /** @var string */
-    private $declared = '';
+    private string $declared = '';
 
     public function enterNode(Node $node)
     {

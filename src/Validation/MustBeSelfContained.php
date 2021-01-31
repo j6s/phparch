@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace J6s\PhpArch\Validation;
 
 use J6s\PhpArch\Utility\NamespaceComperator;
@@ -15,16 +16,11 @@ use J6s\PhpArch\Utility\NamespaceComperatorCollection;
 class MustBeSelfContained implements Validator
 {
 
-    /** @var NamespaceComperatorCollection */
-    protected $namespace;
+    protected NamespaceComperatorCollection $namespace;
 
-    /** @var string */
-    private $message;
+    private string $message;
 
-    /**
-     * @param string|string[] $namespace
-     * @param string $message
-     */
+    /** @param string|string[] $namespace */
     public function __construct(
         $namespace,
         string $message = ':namespace must be selfcontained, but :violatingFrom depends on :violatingTo'

@@ -1,11 +1,11 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace J6s\PhpArch\Validation;
 
 class AllowInterfaces implements Validator
 {
 
-    /** @var Validator */
-    protected $validator;
+    protected Validator $validator;
 
     public function __construct(Validator $validator)
     {
