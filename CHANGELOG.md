@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [unreleased 3.0.0]
+### Added
+- PHP8 is now supported
+
+### Removed
+- PHP 7.3 is no longer supported
+- The minimum compatible version of `symfony/finder` was lifted from 3.* to 4.* making this
+  update incompatible with symfony 3.* projets.
+
 ## [2.0.1] - 2021-01-28
 ### Fixed
 - Fixed a typo in the error message of `mustOnlyDependOn`
