@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace J6s\PhpArch\Parser\Visitor;
 
 use J6s\PhpArch\Parser\ParserException;
@@ -11,6 +12,7 @@ use phpDocumentor\Reflection\Types\Collection;
 use phpDocumentor\Reflection\Types\Context;
 use phpDocumentor\Reflection\Types\Object_;
 use PhpParser\Node;
+
 use function Safe\preg_replace;
 
 class DocBlockTypeAnnotations extends NamespaceCollectingVisitor

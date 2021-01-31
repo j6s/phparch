@@ -1,4 +1,5 @@
-<?php
+<?php declare(strict_types=1);
+
 namespace J6s\PhpArch\Validation;
 
 class AllowInterfaces implements Validator
