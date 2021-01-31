@@ -9,6 +9,7 @@ abstract class NamespaceCollectingVisitor extends NodeVisitorAbstract
     /** @var string[] */
     protected array $namespaces = [];
 
+    /** @return string[] */
     public function getNamespaces(): array
     {
         return $this->namespaces;

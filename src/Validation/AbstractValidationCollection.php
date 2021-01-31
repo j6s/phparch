@@ -10,6 +10,7 @@ abstract class AbstractValidationCollection implements Validator
     /** @var string[][] */
     private array $errors = [];
 
+    /** @param Validator[] $validators */
     public function __construct(array $validators = [])
     {
         $this->validators = $validators;
@@ -41,7 +42,7 @@ abstract class AbstractValidationCollection implements Validator
         return $this->errors[$from . $to];
     }
 
-
+    /** @return Validator[] */
     protected function getValidators(): array
     {
         return $this->validators;

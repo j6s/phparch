@@ -26,6 +26,7 @@ class Component extends AbstractValidationCollection
      */
     private $namespaces = [];
 
+    /** @var array<string, mixed>[] */
     private array $rules = [];
 
     /** @var Component[] */
@@ -69,6 +70,7 @@ class Component extends AbstractValidationCollection
         $this->explicitlyAllowed[] = $component;
     }
 
+    /** @return string[] */
     public function getNamespaces(): array
     {
         return $this->namespaces;
@@ -84,6 +86,7 @@ class Component extends AbstractValidationCollection
         return 'Component(' . $this->name . ')';
     }
 
+    /** @return Validator[] */
     protected function getValidators(): array
     {
         $collection = new ValidationCollection();
@@ -104,6 +107,7 @@ class Component extends AbstractValidationCollection
         return [ $collection ];
     }
 
+    /** @param array<string, mixed> $rule */
     private function ruleToValidator(array $rule): Validator
     {
         $type = $rule['type'] ?? '[UNKNOWN]';

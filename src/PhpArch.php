@@ -13,6 +13,7 @@ use PhpParser\Error as PhpParserError;
 
 class PhpArch
 {
+    /** @var string[] */
     private array $directories = [];
 
     private ValidationCollection $validator;
