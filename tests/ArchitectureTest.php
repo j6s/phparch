@@ -7,6 +7,10 @@ use J6s\PhpArch\PhpArch;
 use J6s\PhpArch\Validation\ExplicitlyAllowDependency;
 use J6s\PhpArch\Validation\MustBeSelfContained;
 
+/**
+ * This class is part of PHParchs own test suite that tests the library
+ * and is not meant to be used in projects.
+ */
 class ArchitectureTest extends TestCase
 {
 
