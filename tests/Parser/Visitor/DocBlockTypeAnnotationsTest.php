@@ -5,7 +5,20 @@ namespace J6s\PhpArch\Tests\Parser\Visitor;
 use J6s\PhpArch\Parser\Visitor\DocBlockTypeAnnotations;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\AnonymousClassDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockArgument;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockArrayItem;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockGenericTypeArrayLong;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockGenericTypeArrayShort;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockReturn;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockTypedTemplate;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionGenericChildA;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionGenericChildB;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionGenericChildC;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionGenericChildD;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionGenericWrapperA;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionGenericWrapperB;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionTypeA;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionTypeB;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\GenericPseudoType;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedAnonymousClassDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockReturn;
@@ -82,4 +95,50 @@ class DocBlockTypeAnnotationsTest extends TestCase
         $this->assertContains(ImportedGenericArgument::class, $this->extracted);
     }
 
+    public function testIncludesUnionTypesFromDocBlocks(): void
+    {
+        $this->assertContains(DocBlockUnionTypeA::class, $this->extracted);
+        $this->assertContains(DocBlockUnionTypeB::class, $this->extracted);
+    }
+
+    public function testResolvesUnionsWhenCombinedWithGenerics(): void
+    {
+        $this->assertContains(DocBlockUnionGenericWrapperA::class, $this->extracted);
+        $this->assertContains(DocBlockUnionGenericWrapperB::class, $this->extracted);
+        $this->assertContains(DocBlockUnionGenericChildA::class, $this->extracted);
+        $this->assertContains(DocBlockUnionGenericChildB::class, $this->extracted);
+        $this->assertContains(DocBlockUnionGenericChildC::class, $this->extracted);
+        $this->assertContains(DocBlockUnionGenericChildD::class, $this->extracted);
+    }
+
+    public function testResolvesArrayTypes(): void
+    {
+        $this->assertContains(DocBlockArrayItem::class, $this->extracted);
+    }
+
+    public function testIgnoresUntypedTemplatesInDocBlocks(): void
+    {
+        $this->assertNotContains('UntypedTemplateInDocblock', $this->extracted);
+    }
+
+    public function testResolvesTypedTemplateTagsToBaseType(): void
+    {
+        $this->assertNotContains('TypedTemplateInDocblock', $this->extracted);
+        $this->assertContains(DocBlockTypedTemplate::class, $this->extracted);
+    }
+
+    public function testResolvesShortStyleGenericShortArraySyntax(): void
+    {
+        $this->assertContains(DocBlockGenericTypeArrayShort::class, $this->extracted);
+    }
+
+    public function testResolvesShortStyleGenericLongArraySyntax(): void
+    {
+        $this->assertContains(DocBlockGenericTypeArrayLong::class, $this->extracted);
+    }
+
+    public function testResolvesGenericPseudoTypes(): void
+    {
+        $this->assertContains(GenericPseudoType::class, $this->extracted);
+    }
 }
