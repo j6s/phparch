@@ -2,9 +2,21 @@
 namespace J6s\PhpArch\Tests\Parser\Visitor\Example;
 
 use Foo\Bar\Baz;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockArrayItem;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockGenericTypeArrayLong;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockGenericTypeArrayShort;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionGenericChildA;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionGenericChildB;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionGenericChildC;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionGenericChildD;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionGenericWrapperA;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionGenericWrapperB;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\GenericPseudoType;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedAnonymousClassDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedGenericArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedGenericClassArgument;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionTypeA;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockUnionTypeB;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\InstanceCreation\ImportedInstanceCreation;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\Traits\ImporetdTrait;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\TypeAnnotation\ImportedArgumentAnnotation;
@@ -12,6 +24,7 @@ use J6s\PhpArch\Tests\Parser\Visitor\Example\TypeAnnotation\ImportedReturnTypeAn
 use J6s\PhpArch\Tests\Parser\Visitor\Example\StaticMethodCall\ImportedStaticMethodCall;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockArgument;
 use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\ImportedDocBlockReturn;
+use J6s\PhpArch\Tests\Parser\Visitor\Example\DocBlock\DocBlockTypedTemplate;
 
 class TestClass extends ParentClass implements SomeInterface
 {
@@ -129,6 +142,71 @@ class TestClass extends ParentClass implements SomeInterface
      * @return ImportedGenericClassArgument<ImportedGenericArgument>
      */
     public function genericsInDocBlock($argument)
+    {
+
+    }
+
+    /**
+     * @return DocBlockUnionTypeA|DocBlockUnionTypeB
+     */
+    public function unionTypeInDocBlock()
+    {
+
+    }
+
+    /**
+     * @return DocBlockUnionGenericWrapperA<DocBlockUnionGenericChildA|DocBlockUnionGenericChildB>|DocBlockUnionGenericWrapperB<DocBlockUnionGenericChildC|DocBlockUnionGenericChildD>
+     */
+    public function unionAndGenericInDocBlock()
+    {
+
+    }
+
+    /**
+     * @return DocBlockArrayItem[]
+     */
+    public function docBlockArray()
+    {
+
+    }
+    /**
+     * @return array<DocBlockGenericTypeArrayShort>
+     */
+    public function docBlockArrayGenericStyleShort()
+    {
+
+    }
+
+    /**
+     * @return array<int, DocBlockGenericTypeArrayLong>
+     */
+    public function docBlockArraydocBlockArrayGenericStyleLong()
+    {
+
+    }
+
+    /**
+     * @return list<GenericPseudoType>
+     */
+    public function docBlockGenericPseudoType()
+    {
+
+    }
+
+    /**
+     * @template UntypedTemplateInDocblock
+     * @return UntypedTemplateInDocblock
+     */
+    public function docBlockUntypedTemplate()
+    {
+
+    }
+
+    /**
+     * @template TypedTemplateInDocblock of DocBlockTypedTemplate
+     * @return TypedTemplateInDocblock
+     */
+    public function docBlockTypedTemplate()
     {
 
     }
