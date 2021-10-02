@@ -7,10 +7,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
         php-version: ["7.4", "8.0"]
-    runs-on: ${{ matrix.os }}
-    name: Test ${{ matrix.php-version }} on ${{ matrix.os }}
+    runs-on: ubuntu-latest
+    name: Test on PHP ${{ matrix.php-version }}
     steps:
       - name: 🛒 Checkout
         uses: actions/checkout@v2
