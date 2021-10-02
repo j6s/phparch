@@ -1,4 +1,4 @@
-FROM php:7-cli
+FROM php:7.4-cli
 
 RUN apt-get update 
 RUN apt-get install -y curl zip
