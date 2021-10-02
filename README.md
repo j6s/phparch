@@ -165,6 +165,15 @@ $architecture = (new Architecture)
     ->addComposerBasedComponent('packages/subpackage/composer.json');
 ```
 
+## Development Environment
+
+Unit tests can be run using docker:
+
+```bash
+docker-compose build
+docker-compose up
+```
+
 ## Examples
 
 - [PHPArch tests its own architecture](./tests/ArchitectureTest.php)
