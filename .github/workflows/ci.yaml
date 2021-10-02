@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   sniff:
-    name: Sniff on PHP ${{ matrix.php-version }}
+    name: 🕵️ Code Sniffer (PHP ${{ matrix.php-version }})
     strategy:
       fail-fast: false
       matrix:
@@ -17,11 +17,11 @@ jobs:
         uses: php-actions/composer@v5
         with:
           php_version: ${{ matrix.php-version }}
-      - name: 🕵️ Code Sniffer
+      - name: 🕵️ Run Code Sniffer
         run: ./vendor/bin/phpcs -vvv
 
   analyze:
-    name: Analyze on PHP ${{ matrix.php-version }}
+    name: 🔎 Static Analysis (PHP ${{ matrix.php-version }})
     strategy:
       fail-fast: false
       matrix:
@@ -34,11 +34,11 @@ jobs:
         uses: php-actions/composer@v5
         with:
           php_version: ${{ matrix.php-version }}
-      - name: 🔎 Static Analysis
+      - name: 🔎 Perform Static Analysis
         run: ./vendor/bin/phpstan -vvv
 
   test:
-    name: Test on PHP ${{ matrix.php-version }}
+    name: 🧪 Unit Testing (PHP ${{ matrix.php-version }})
     strategy:
       fail-fast: false
       matrix:
@@ -51,5 +51,5 @@ jobs:
         uses: php-actions/composer@v5
         with:
           php_version: ${{ matrix.php-version }}
-      - name: 🧪 Unit Tests
+      - name: 🧪 Run Tests
         run: ./vendor/bin/phpunit -vvv
