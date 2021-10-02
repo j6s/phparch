@@ -19,8 +19,11 @@ jobs:
         with:
           php_version: ${{ matrix.php-version }}
 
-      - name: 🧪 Run Tests
-        uses: php-actions/phpunit@v3
-        with:
-          php_version: ${{ matrix.php-version }}
-          configuration: phpunit.xml
+      - name: 🕵️ Code Sniffer
+        run: ./vendor/bin/phpcs -vvv
+
+      - name: 🔎 Static Analysis
+        run: ./vendor/bin/phpstan -vvv
+
+      - name: 🧪 Unit Tests
+        run: ./vendor/bin/phpunit -vvv
