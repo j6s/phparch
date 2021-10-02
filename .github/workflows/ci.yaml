@@ -4,15 +4,24 @@ on: [push]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest", "windows-latest", "macos-latest"]
+        php-version: ["7.4", "8.0"]
+    runs-on: ${{ matrix.os }}
+    name: Test ${{ matrix.php-version }} on ${{ matrix.os }}
     steps:
       - name: 🛒 Checkout
         uses: actions/checkout@v2
+
       - name: ⚙️ Install composer
         uses: php-actions/composer@v5
-      - name: ⚙️ Install phpunit
-        uses: php-actions/phpunit@v3
+        with:
+          php_version: ${{ matrix.php-version }}
+
       - name: 🧪 Run Tests
         uses: php-actions/phpunit@v3
         with:
+          php_version: ${{ matrix.php-version }}
           configuration: phpunit.xml
