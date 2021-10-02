@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   sniff:
-    name: 🕵️ Code Sniffer (PHP ${{ matrix.php-version }})
+    name: 🕵️ ${{ matrix.php-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -21,7 +21,7 @@ jobs:
         run: ./vendor/bin/phpcs -vvv
 
   analyze:
-    name: 🔎 Static Analysis (PHP ${{ matrix.php-version }})
+    name: 🔎 PHP ${{ matrix.php-version }}
     strategy:
       fail-fast: false
       matrix:
@@ -38,7 +38,7 @@ jobs:
         run: ./vendor/bin/phpstan -vvv
 
   test:
-    name: 🧪 Unit Testing (PHP ${{ matrix.php-version }})
+    name: 🧪 PHP ${{ matrix.php-version }}
     strategy:
       fail-fast: false
       matrix:
