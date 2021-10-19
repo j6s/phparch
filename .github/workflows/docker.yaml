@@ -1,0 +1,14 @@
+name: Test in Docker
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Checkout Repo
+        uses: actions/checkout@v2
+      - name: 🐳 Build Container
+        run: docker-compose build
+      - name: 🧪 Test in Docker
+        run: docker-compose up
