@@ -1,0 +1,55 @@
+name: CI
+
+on: [push]
+
+jobs:
+  sniff:
+    name: 🕵️ PHP ${{ matrix.php-version }} Code Sniffer
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ["7.4", "8.0"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v2
+      - name: ⚙️ Install composer
+        uses: php-actions/composer@v5
+        with:
+          php_version: ${{ matrix.php-version }}
+      - name: 🕵️ Run Code Sniffer
+        run: ./vendor/bin/phpcs -vvv
+
+  analyze:
+    name: 🔎 PHP ${{ matrix.php-version }} Static Analysis
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ["7.4", "8.0"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v2
+      - name: ⚙️ Install composer
+        uses: php-actions/composer@v5
+        with:
+          php_version: ${{ matrix.php-version }}
+      - name: 🔎 Perform Static Analysis
+        run: ./vendor/bin/phpstan -vvv
+
+  test:
+    name: 🧪 PHP ${{ matrix.php-version }} Unit Testing
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ["7.4", "8.0"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v2
+      - name: ⚙️ Install composer
+        uses: php-actions/composer@v5
+        with:
+          php_version: ${{ matrix.php-version }}
+      - name: 🧪 Run Tests
+        run: ./vendor/bin/phpunit -vvv
