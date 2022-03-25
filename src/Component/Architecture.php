@@ -3,6 +3,7 @@
 namespace J6s\PhpArch\Component;
 
 use J6s\PhpArch\Exception\ComponentNotDefinedException;
+use J6s\PhpArch\Utility\CachedComposerFileParser;
 use J6s\PhpArch\Utility\ComposerFileParser;
 use J6s\PhpArch\Validation\ValidationCollection;
 use J6s\PhpArch\Utility\ArrayUtility;
@@ -16,6 +17,11 @@ class Architecture extends ValidationCollection
     private ?Component $currentComponent = null;
 
     private ?Component $lastComponent = null;
+
+    /**
+     * @var ComposerFileParser[]
+     */
+    private static array $composerFileParsers = [];
 
     /**
      * Adds or selects a component that is identified by the given name.
@@ -231,7 +237,7 @@ class Architecture extends ValidationCollection
         bool $includeDev = false
     ): self {
         $this->getCurrent()->mustOnlyDependOnComposerDependencies(
-            new ComposerFileParser($composerFile, $lockFile),
+            self::$composerFileParsers[$composerFile] ?? self::$composerFileParsers[$composerFile] = new CachedComposerFileParser($composerFile, $lockFile),
             $includeDev
         );
         return $this;
