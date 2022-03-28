@@ -3,7 +3,8 @@
 namespace J6s\PhpArch\Component;
 
 use J6s\PhpArch\Exception\ComponentNotDefinedException;
-use J6s\PhpArch\Utility\ComposerFileParser;
+use J6s\PhpArch\Utility\BaseComposerFileParserFactory;
+use J6s\PhpArch\Utility\ComposerFileParserFactory;
 use J6s\PhpArch\Validation\ValidationCollection;
 use J6s\PhpArch\Utility\ArrayUtility;
 
@@ -16,6 +17,23 @@ class Architecture extends ValidationCollection
     private ?Component $currentComponent = null;
 
     private ?Component $lastComponent = null;
+
+    private ComposerFileParserFactory $composerFileParserFactory;
+
+    public function __construct(array $validators = [])
+    {
+        parent::__construct($validators);
+
+        $this->composerFileParserFactory = new BaseComposerFileParserFactory();
+    }
+
+    /**
+     * @param ComposerFileParserFactory $composerFileParserFactory
+     */
+    public function setComposerFileParserFactory(ComposerFileParserFactory $composerFileParserFactory): void
+    {
+        $this->composerFileParserFactory = $composerFileParserFactory;
+    }
 
     /**
      * Adds or selects a component that is identified by the given name.
@@ -231,7 +249,7 @@ class Architecture extends ValidationCollection
         bool $includeDev = false
     ): self {
         $this->getCurrent()->mustOnlyDependOnComposerDependencies(
-            new ComposerFileParser($composerFile, $lockFile),
+            $this->composerFileParserFactory->create($composerFile, $lockFile),
             $includeDev
         );
         return $this;
@@ -256,7 +274,7 @@ class Architecture extends ValidationCollection
         string $componentName = null,
         bool $includeDev = false
     ): self {
-        $parser = new ComposerFileParser($composerFile, $lockFile);
+        $parser = $this->composerFileParserFactory->create($composerFile, $lockFile);
         $this->component($componentName ?? $parser->getName());
 
         foreach ($parser->getNamespaces() as $namespace) {
