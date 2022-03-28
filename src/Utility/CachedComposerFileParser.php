@@ -6,41 +6,55 @@ namespace J6s\PhpArch\Utility;
 
 class CachedComposerFileParser extends ComposerFileParser
 {
+    private const KEY_WITH_DEV = 'with_dev';
+    private const KEY_WITHOUT_DEV = 'without_dev';
+
+    /**
+     * @var array<string, string[]>
+     * @phpstan-var array<self::KEY_*, string[]>
+     */
     private array $deepRequirementNamespaces = [];
+
+    /**
+     * @var array<string, string[]>
+     * @phpstan-var array<self::KEY_*, string[]>
+     */
     private array $namespaces = [];
+
+    /**
+     * @var array<string, string[]>
+     * @phpstan-var array<self::KEY_*, string[]>
+     */
     private array $directDependencies = [];
 
     public function getNamespaces(bool $includeDev = false): array
     {
-        if (true === \array_key_exists((int) $includeDev, $this->namespaces)) {
-            return $this->namespaces[(int)$includeDev];
+        $key = $includeDev ? self::KEY_WITH_DEV : self::KEY_WITHOUT_DEV;
+        if (!array_key_exists($key, $this->namespaces)) {
+            $this->namespaces[$key] = parent::getNamespaces($includeDev);
         }
 
-        $this->namespaces[(int)$includeDev] = parent::getNamespaces($includeDev);
-
-        return $this->namespaces[(int)$includeDev];
+        return $this->namespaces[$key];
     }
 
     public function getDirectDependencies(bool $includeDev): array
     {
-        if (true === \array_key_exists((int) $includeDev, $this->directDependencies)) {
-            return $this->directDependencies[(int)$includeDev];
+        $key = $includeDev ? self::KEY_WITH_DEV : self::KEY_WITHOUT_DEV;
+        if (!array_key_exists($key, $this->directDependencies)) {
+            $this->directDependencies[$key] = parent::getDirectDependencies($includeDev);
         }
 
-        $this->directDependencies[(int)$includeDev] = parent::getDirectDependencies($includeDev);
-
-        return $this->directDependencies[(int)$includeDev];
+        return $this->directDependencies[$key];
     }
 
 
     public function getDeepRequirementNamespaces(bool $includeDev): array
     {
-        if (true === \array_key_exists((int) $includeDev, $this->deepRequirementNamespaces)) {
-            return $this->deepRequirementNamespaces[(int)$includeDev];
+        $key = $includeDev ? self::KEY_WITH_DEV : self::KEY_WITHOUT_DEV;
+        if (!array_key_exists($key, $this->deepRequirementNamespaces)) {
+            $this->deepRequirementNamespaces[$key] = parent::getDeepRequirementNamespaces($includeDev);
         }
 
-        $this->deepRequirementNamespaces[(int)$includeDev] = parent::getDeepRequirementNamespaces($includeDev);
-
-        return $this->deepRequirementNamespaces[(int)$includeDev];
+        return $this->deepRequirementNamespaces[$key];
     }
 }

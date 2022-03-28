@@ -6,17 +6,20 @@ namespace J6s\PhpArch\Utility;
 
 class CachedComposerFileParserFactory implements ComposerFileParserFactory
 {
+    /** @var array<string, ComposerFileParser>  */
     private array $composerFileParsersCache = [];
 
     public function create(string $composerFile, string $lockFile = null): ComposerFileParser
     {
-        if (false === isset($this->composerFileParsersCache[$composerFile][$lockFile])) {
-            $this->composerFileParsersCache[$composerFile][$lockFile] = new CachedComposerFileParser(
+        $key = sprintf('%s|%s', $composerFile, $lockFile ?? 'default');
+
+        if (!array_key_exists($key, $this->composerFileParsersCache)) {
+            $this->composerFileParsersCache[$key] = new CachedComposerFileParser(
                 $composerFile,
                 $lockFile
             );
         }
 
-        return $this->composerFileParsersCache[$composerFile][$lockFile];
+        return $this->composerFileParsersCache[$key];
     }
 }
