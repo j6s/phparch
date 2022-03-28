@@ -2,7 +2,7 @@
 
 namespace J6s\PhpArch\Component;
 
-use J6s\PhpArch\Utility\ComposerFileParser;
+use J6s\PhpArch\Composer\ComposerFileParserInterface;
 use J6s\PhpArch\Validation\AbstractValidationCollection;
 use J6s\PhpArch\Validation\AllowInterfaces;
 use J6s\PhpArch\Validation\ExplicitlyAllowDependency;
@@ -56,8 +56,10 @@ class Component extends AbstractValidationCollection
         ];
     }
 
-    public function mustOnlyDependOnComposerDependencies(ComposerFileParser $parser, bool $includeDev = false): void
-    {
+    public function mustOnlyDependOnComposerDependencies(
+        ComposerFileParserInterface $parser,
+        bool $includeDev = false
+    ): void {
         $this->rules[] = [
             'type' => self::MUST_ONLY_DEPEND_ON_COMPOSER_DEPENDENCIES,
             'parser' => $parser,
@@ -170,7 +172,7 @@ class Component extends AbstractValidationCollection
     }
 
     private function mustOnlyDependOnComposerDependenciesValidator(
-        ComposerFileParser $parser,
+        ComposerFileParserInterface $parser,
         bool $includeDev
     ): Validator {
         $validators = new ValidationCollection();

@@ -12,6 +12,7 @@ class ExtractDeclaredNamespace extends NodeVisitorAbstract
 
     public function enterNode(Node $node)
     {
+        /** @phpstan-ignore-next-line */
         if ($node instanceof Node\Stmt\ClassLike && isset($node->namespacedName) && $node->namespacedName  !== null) {
             $this->declared = $node->namespacedName->toString();
         }
