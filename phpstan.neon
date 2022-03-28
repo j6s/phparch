@@ -2,13 +2,3 @@ parameters:
     level: 8
     paths:
         - src
-    ignoreErrors:
-
-        # ComposerFileParser does not have full type hints internally, since it passes around
-        # the parsed composer file as an array.
-        - message: '#Method .* has parameter .* with no value type specified in iterable type array#'
-          path: src/Utility/ComposerFileParser.php
-        - message: '#Method .* return type has no value type specified in iterable type array#'
-          path: src/Utility/ComposerFileParser.php
-        - message: '#Property .* type has no value type specified in iterable type array#'
-          path: src/Utility/ComposerFileParser.php

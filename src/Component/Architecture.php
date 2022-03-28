@@ -3,8 +3,8 @@
 namespace J6s\PhpArch\Component;
 
 use J6s\PhpArch\Exception\ComponentNotDefinedException;
-use J6s\PhpArch\Utility\BaseComposerFileParserFactory;
-use J6s\PhpArch\Utility\ComposerFileParserFactory;
+use J6s\PhpArch\Composer\ComposerFileParserFactory;
+use J6s\PhpArch\Composer\ComposerFileParserFactoryInterface;
 use J6s\PhpArch\Validation\ValidationCollection;
 use J6s\PhpArch\Utility\ArrayUtility;
 
@@ -18,21 +18,22 @@ class Architecture extends ValidationCollection
 
     private ?Component $lastComponent = null;
 
-    private ComposerFileParserFactory $composerFileParserFactory;
+    private ComposerFileParserFactoryInterface $composerFileParserFactory;
 
     public function __construct(array $validators = [])
     {
         parent::__construct($validators);
 
-        $this->composerFileParserFactory = new BaseComposerFileParserFactory();
+        $this->composerFileParserFactory = new ComposerFileParserFactory();
     }
 
     /**
-     * @param ComposerFileParserFactory $composerFileParserFactory
+     * @return $this
      */
-    public function setComposerFileParserFactory(ComposerFileParserFactory $composerFileParserFactory): void
+    public function withComposerFileParserFactory(ComposerFileParserFactoryInterface $factory): self
     {
-        $this->composerFileParserFactory = $composerFileParserFactory;
+        $this->composerFileParserFactory = $factory;
+        return $this;
     }
 
     /**

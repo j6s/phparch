@@ -1,21 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace J6s\PhpArch\Utility;
+namespace J6s\PhpArch\Composer;
 
 use function Safe\file_get_contents;
 use function Safe\json_decode;
 
-class ComposerFileParser
+class ComposerFileParser implements ComposerFileParserInterface
 {
 
     private string $composerFilePath;
 
+    /** @var array<string, mixed> */
     private array $composerFile;
 
     private string $lockFilePath;
 
+    /** @var array<string, mixed> */
     private array $lockFile;
 
+    /** @var array<string, mixed> */
     private array $lockedPackages;
 
     public function __construct(string $composerFile, string $lockFile = null)
@@ -106,6 +109,10 @@ class ComposerFileParser
         return $this->composerFile['name'];
     }
 
+    /**
+     * @param mixed[] $topLevelRequirements
+     * @return mixed[]
+     */
     private function flattenDependencies(array $topLevelRequirements, bool $includeDev): array
     {
         $required = [];
@@ -138,21 +145,28 @@ class ComposerFileParser
         return $required;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function getPackagesFromLockFile(): array
     {
         $lockedPackages = [];
 
         foreach ($this->lockFile['packages'] ?? [] as $package) {
-            $lockedPackages[$package['name']] = $package;
+            $lockedPackages[(string) $package['name']] = $package;
         }
 
         foreach ($this->lockFile['packages-dev'] ?? [] as $package) {
-            $lockedPackages[$package['name']] = $package;
+            $lockedPackages[(string) $package['name']] = $package;
         }
 
         return $lockedPackages;
     }
 
+    /**
+     * @param array<string, mixed> $package
+     * @return string[]
+     */
     private function extractNamespaces(array $package, bool $includeDev): array
     {
         $namespaces = [];

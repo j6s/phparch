@@ -1,9 +1,9 @@
 <?php
-namespace J6s\PhpArch\Tests\Utility;
+namespace J6s\PhpArch\Tests\Composer;
 
 
 use J6s\PhpArch\Tests\TestCase;
-use J6s\PhpArch\Utility\ComposerFileParser;
+use J6s\PhpArch\Composer\ComposerFileParser;
 
 class ComposerFileParserTest extends TestCase
 {

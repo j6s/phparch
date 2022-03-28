@@ -2,10 +2,16 @@
 
 declare(strict_types=1);
 
-namespace J6s\PhpArch\Utility;
+namespace J6s\PhpArch\Composer;
 
-class CachedComposerFileParser extends ComposerFileParser
+class ComposerFileParserCacheDecorator implements ComposerFileParserInterface
 {
+    private ComposerFileParserInterface $decorated;
+    public function __construct(ComposerFileParserInterface $decorated)
+    {
+        $this->decorated = $decorated;
+    }
+
     private const KEY_WITH_DEV = 'with_dev';
     private const KEY_WITHOUT_DEV = 'without_dev';
 
@@ -31,7 +37,7 @@ class CachedComposerFileParser extends ComposerFileParser
     {
         $key = $includeDev ? self::KEY_WITH_DEV : self::KEY_WITHOUT_DEV;
         if (!array_key_exists($key, $this->namespaces)) {
-            $this->namespaces[$key] = parent::getNamespaces($includeDev);
+            $this->namespaces[$key] = $this->decorated->getNamespaces($includeDev);
         }
 
         return $this->namespaces[$key];
@@ -41,7 +47,7 @@ class CachedComposerFileParser extends ComposerFileParser
     {
         $key = $includeDev ? self::KEY_WITH_DEV : self::KEY_WITHOUT_DEV;
         if (!array_key_exists($key, $this->directDependencies)) {
-            $this->directDependencies[$key] = parent::getDirectDependencies($includeDev);
+            $this->directDependencies[$key] = $this->decorated->getDirectDependencies($includeDev);
         }
 
         return $this->directDependencies[$key];
@@ -52,9 +58,29 @@ class CachedComposerFileParser extends ComposerFileParser
     {
         $key = $includeDev ? self::KEY_WITH_DEV : self::KEY_WITHOUT_DEV;
         if (!array_key_exists($key, $this->deepRequirementNamespaces)) {
-            $this->deepRequirementNamespaces[$key] = parent::getDeepRequirementNamespaces($includeDev);
+            $this->deepRequirementNamespaces[$key] = $this->decorated->getDeepRequirementNamespaces($includeDev);
         }
 
         return $this->deepRequirementNamespaces[$key];
+    }
+
+    public function autoloadableNamespacesForRequirements(array $requirements, bool $includeDev): array
+    {
+        return $this->decorated->autoloadableNamespacesForRequirements($requirements, $includeDev);
+    }
+
+    public function getComposerFilePath(): string
+    {
+        return $this->decorated->getComposerFilePath();
+    }
+
+    public function getLockFilePath(): string
+    {
+        return $this->decorated->getLockFilePath();
+    }
+
+    public function getName(): string
+    {
+        return $this->decorated->getName();
     }
 }

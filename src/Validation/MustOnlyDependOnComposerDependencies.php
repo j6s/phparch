@@ -2,6 +2,7 @@
 
 namespace J6s\PhpArch\Validation;
 
+use J6s\PhpArch\Composer\ComposerFileParserInterface;
 use J6s\PhpArch\Utility\ComposerFileParser;
 
 /**
@@ -14,11 +15,11 @@ use J6s\PhpArch\Utility\ComposerFileParser;
 class MustOnlyDependOnComposerDependencies extends MustOnlyDependOn
 {
 
-    private ComposerFileParser $parser;
+    private ComposerFileParserInterface $parser;
 
     public function __construct(
         string $from,
-        ComposerFileParser $parser,
+        ComposerFileParserInterface $parser,
         bool $includeDev = false,
         string $message = ':from must only depend on dependencies in :composerFile (:lockFile)' .
         ' but :violatingFrom depends on :violatingTo'
