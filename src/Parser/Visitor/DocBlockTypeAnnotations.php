@@ -181,21 +181,4 @@ class DocBlockTypeAnnotations extends NamespaceCollectingVisitor
 
         return $node->getAlias()->toString();
     }
-
-    private function stripLeadingBackslashIfAliasedType(string $namespace, Context $context): string
-    {
-        $withoutBackslash = ltrim($namespace, '\\');
-        [ $firstPart ] = explode('\\', $withoutBackslash);
-        if (array_key_exists($firstPart, $context->getNamespaceAliases())) {
-            return $withoutBackslash;
-        }
-
-        return $namespace;
-    }
-
-    private function isImported(string $namespace, Context $context): bool
-    {
-        [ $firstPart ] = explode($namespace, '\\');
-        return array_key_exists((string) $firstPart, $context->getNamespaceAliases());
-    }
 }
