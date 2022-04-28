@@ -1,0 +1,9 @@
+version: '2'
+
+services: 
+  php:
+    build: ./
+    working_dir: /phparch
+    command: bash -c "composer install && ./vendor/bin/phpunit -vvv"
+    volumes:
+      - ./:/phparch
