@@ -1,3 +1,16 @@
+# PHPArch is no longer maintained
+
+This project is no longer maintained. When I started development, similar tools did not yet exist
+or, in the case of deptrac, did not cover my use-case. By now, better tools exist and I am happy
+to point users towards those.
+
+* [PHPAt](https://github.com/carlosas/phpat) is the spiritual sucessor to PHPArch and even contains some of it's code
+* [Deptrac](https://github.com/qossmic/deptrac) takes more of a graph-based approach to the problem
+
+Both serve as good replacements if you have previously used PHPArch.
+
+---
+
 # PHPArch [![Build Status](https://travis-ci.org/j6s/phparch.svg?branch=development)](https://travis-ci.org/j6s/phparch)
 
 - [What is this?](#what-is-this)
